@@ -1,13 +1,11 @@
 {
   "name": "it-support-hub",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
-  
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
 }

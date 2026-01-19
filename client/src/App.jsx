@@ -1,15 +1,19 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import UserLayout from "./layouts/UserLayout";
+
+import Dashboard from "./pages/user/Dashboard";
+import RaiseTicket from "./pages/user/RaiseTicket";
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/user" element={<UserLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="raise-ticket" element={<RaiseTicket />} />
+        </Route>
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 
