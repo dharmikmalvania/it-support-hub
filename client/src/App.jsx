@@ -1,18 +1,22 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import UserLayout from "./layouts/UserLayout";
-
-import Dashboard from "./pages/user/Dashboard";
-import RaiseTicket from "./pages/user/RaiseTicket";
+import Sidebar from "./components/Sidebar";
+import Dashboard from "./pages/Dashboard";
+import RaiseTicket from "./pages/RaiseTicket";
+import "./styles/dashboard.css";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/user" element={<UserLayout />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="raise-ticket" element={<RaiseTicket />} />
-        </Route>
-      </Routes>
+      <div className="layout">
+        <Sidebar />
+
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/raise-ticket" element={<RaiseTicket />} />
+          </Routes>
+        </div>
+      </div>
     </BrowserRouter>
   );
 }
