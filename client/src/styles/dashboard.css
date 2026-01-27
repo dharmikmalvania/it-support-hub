@@ -233,3 +233,157 @@
   width: 180px;
 }
 
+/* ===== RAISE TICKET PAGE ===== */
+
+.ticket-page {
+  max-width: 700px;
+  margin: auto;
+}
+
+.page-title {
+  font-size: 26px;
+  margin-bottom: 20px;
+  color: #1f2937;
+}
+
+.ticket-form {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #374151;
+}
+
+.ticket-form input,
+.ticket-form select,
+.ticket-form textarea {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ticket-form input:focus,
+.ticket-form select:focus,
+.ticket-form textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.ticket-form input[type="file"] {
+  padding: 6px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 20px rgba(37, 99, 235, 0.35);
+}
+.logout-btn {
+  margin-top: 30px;
+  padding: 10px;
+  width: 100%;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.logout-btn:hover {
+  background: #b91c1c;
+}
+.ticket-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.ticket-table th,
+.ticket-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.ticket-table th {
+  background: #f3f4f6;
+  text-align: left;
+}
+
+.status.open {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.status.closed {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.close-btn {
+  padding: 6px 12px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background: #b91c1c;
+}
+/* EDIT BUTTON */
+.edit-btn {
+  padding: 6px 12px;
+  background: #2563eb; /* blue */
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-right: 8px;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.edit-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.edit-btn:active {
+  transform: translateY(0);
+}
+
+
+/* Mobile */
+@media (max-width: 768px) {
+  .ticket-page {
+    padding: 10px;
+  }
+}

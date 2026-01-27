@@ -1,33 +1,55 @@
-import "./../styles/dashboard.css";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import "../styles/dashboard.css";
 
 const Dashboard = () => {
-  let userInfo = null;
+  const [stats, setStats] = useState({
+    total: 0,
+    open: 0,
+    closed: 0,
+  });
 
-  try {
-    userInfo = JSON.parse(localStorage.getItem("userInfo"));
-  } catch (err) {
-    console.log("User not logged in");
-  }
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:5000/api/tickets/stats",
+          {
+            headers: {
+              Authorization: `Bearer ${userInfo.token}`,
+            },
+          }
+        );
+
+        setStats(res.data);
+      } catch (error) {
+        console.error("Failed to load stats");
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   return (
     <div>
       <h1>Dashboard</h1>
-      <p>Welcome {userInfo?.name || "User"} 👋</p>
 
       <div className="dashboard-cards">
         <div className="card">
           <h3>Total Tickets</h3>
-          <p>0</p>
+          <p>{stats.total}</p>
         </div>
 
         <div className="card">
           <h3>Open Tickets</h3>
-          <p>0</p>
+          <p>{stats.open}</p>
         </div>
 
         <div className="card">
           <h3>Closed Tickets</h3>
-          <p>0</p>
+          <p>{stats.closed}</p>
         </div>
       </div>
     </div>

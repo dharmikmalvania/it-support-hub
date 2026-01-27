@@ -1,26 +1,62 @@
 import { useState } from "react";
-import { registerUser } from "../../services/authService";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../../styles/auth.css";
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
+    terms: false,
   });
 
-  const { name, email, password } = formData;
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const { name, email, password, confirmPassword, terms } = formData;
+
+  const onChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+    setError("");
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (password !== confirmPassword) {
+      return setError("Passwords do not match");
+    }
+
+    if (!terms) {
+      return setError("Please accept Terms & Conditions");
+    }
+
     try {
-      await registerUser(formData);
-      alert("Registration successful");
-    } catch (error) {
-      alert(error.response?.data?.message || "Server error");
+      setLoading(true);
+
+      await axios.post("http://localhost:5000/api/auth/register", {
+        name,
+        email,
+        password,
+      });
+
+      setSuccess("Account created successfully. Redirecting to login...");
+      setTimeout(() => navigate("/login"), 1500);
+    } catch (err) {
+      setError(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -29,16 +65,64 @@ const Register = () => {
       <div className="auth-card">
         <h2>Create Account</h2>
 
-        <form className="auth-form" onSubmit={onSubmit}>
-          <input name="name" placeholder="Full Name" value={name} onChange={onChange} required />
-          <input name="email" placeholder="Email Address" value={email} onChange={onChange} required />
-          <input name="password" type="password" placeholder="Password" value={password} onChange={onChange} required />
-          <button type="submit">Register</button>
+        {error && <div className="error-msg">{error}</div>}
+        {success && <div className="success-msg">{success}</div>}
+
+        <form onSubmit={onSubmit} className="auth-form">
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            value={name}
+            onChange={onChange}
+            required
+          />
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            value={email}
+            onChange={onChange}
+            required
+          />
+
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={password}
+            onChange={onChange}
+            required
+          />
+
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={onChange}
+            required
+          />
+
+          <div className="checkbox-group">
+            <input
+              type="checkbox"
+              name="terms"
+              checked={terms}
+              onChange={onChange}
+            />
+            <label>I agree to the Terms & Conditions</label>
+          </div>
+
+          <button type="submit" disabled={loading}>
+            {loading ? "Creating account..." : "Register"}
+          </button>
         </form>
 
-        <div className="auth-footer">
+        <p className="auth-footer">
           Already have an account? <a href="/login">Login</a>
-        </div>
+        </p>
       </div>
     </div>
   );
