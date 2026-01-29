@@ -141,4 +141,29 @@ export const submitFeedback = async (req, res) => {
   res.json({ message: "Feedback submitted successfully" });
 };
 
+export const closeTicketWithFeedback = async (req, res) => {
+  const { rating, comment } = req.body;
+
+  const ticket = await Ticket.findById(req.params.id);
+
+  if (!ticket) {
+    return res.status(404).json({ message: "Ticket not found" });
+  }
+
+  if (ticket.user.toString() !== req.user.id) {
+    return res.status(401).json({ message: "Not authorized" });
+  }
+
+  ticket.status = "Closed";
+  ticket.feedback = {
+    rating,
+    comment,
+    createdAt: new Date(),
+  };
+
+  await ticket.save();
+
+  res.json({ message: "Ticket closed with feedback" });
+};
+
 

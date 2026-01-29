@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "../../components/sidebar";
 import axiosInstance from "../../utils/axiosInstance";
 import "../../styles/ticketforms.css";
 

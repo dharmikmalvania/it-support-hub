@@ -12,6 +12,7 @@ const Sidebar = () => {
         <NavLink to="/user/dashboard">Dashboard</NavLink>
        <NavLink to="/user/raise-ticket">Raise Ticket</NavLink> 
         <NavLink to="/user/my-tickets">My Tickets</NavLink>
+        <NavLink to="/user/ticket-history">Ticket History</NavLink>
         <NavLink to="/user/logout">Logout</NavLink>
       </nav>
     </aside>

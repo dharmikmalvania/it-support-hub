@@ -115,11 +115,12 @@ return (
       </button>
 
       <button
-        className="close-btn"
-        onClick={() => closeTicket(ticket._id)}
-      >
-        Close
-      </button>
+  className="close-btn"
+  onClick={() => navigate(`/user/feedback/${ticket._id}`)}
+>
+  Close
+</button>
+
     </div>
   )}
 
