@@ -1,5 +1,4 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import "../styles/sidebar.css";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -16,7 +15,7 @@ const Sidebar = () => {
       <NavLink to="/user/dashboard">Dashboard</NavLink>
       <NavLink to="/user/raise-ticket">Raise Ticket</NavLink>
       <NavLink to="/user/my-tickets">My Tickets</NavLink>
-      <NavLink to="/user/ticket-history">History</NavLink>
+      <NavLink to="/user/history">History</NavLink>
 
       <button onClick={logout}>Logout</button>
     </aside>

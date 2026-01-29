@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Sidebar from "../../components/Sidebar";
 import "../../styles/dashboard.css";
 
 const Dashboard = () => {
@@ -13,16 +12,9 @@ const Dashboard = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   useEffect(() => {
+    if (!userInfo?.token) return;
+
     const fetchStats = async () => {
-
- const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
-    // ✅ SAFETY CHECK
-    if (!userInfo || !userInfo.token) {
-      console.warn("No user token found");
-      return;
-    }
-
       try {
         const res = await axios.get(
           "http://localhost:5000/api/tickets/stats",
@@ -32,57 +24,60 @@ const Dashboard = () => {
             },
           }
         );
+
         setStats(res.data);
       } catch (error) {
-        console.error("Failed to load stats");
+        console.error("Failed to load dashboard stats", error);
       }
     };
 
     fetchStats();
   }, []);
 
-return (
-  <div className="user-layout">
-    <Sidebar />
-
-    <main className="main-content">
+  return (
+    <div className="dashboard-page">
       {/* HEADER */}
-      <div className="dashborad-container">
+      <div className="dashboard-header">
         <h1>User Dashboard</h1>
-        <p>Welcome back 👋 Here’s your support overview</p>
+        <p className="welcome-text">
+          Welcome back 👋 Here’s your support overview
+        </p>
       </div>
 
-      {/* STATS */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <span>Total Tickets</span>
-          <h2>{stats.total}</h2>
+      {/* STATS CARDS */}
+      <div className="dashboard-cards">
+        <div className="card">
+          <h3>Total Tickets</h3>
+          <p className="card-value">{stats.total}</p>
         </div>
 
-        <div className="stat-card">
-          <span>Open Tickets</span>
-          <h2>{stats.open}</h2>
+        <div className="card">
+          <h3>Open Tickets</h3>
+          <p className="card-value">{stats.open}</p>
         </div>
 
-        <div className="stat-card">
-          <span>Closed Tickets</span>
-          <h2>{stats.closed}</h2>
+        <div className="card">
+          <h3>Closed Tickets</h3>
+          <p className="card-value">{stats.closed}</p>
         </div>
       </div>
 
       {/* QUICK ACTIONS */}
-      <div className="content-section">
-        <h3>Quick Actions</h3>
+      <div className="dashboard-section">
+        <h2>Quick Actions</h2>
+
         <div className="quick-actions">
-          <a href="/user/raise-ticket">➕ Raise Ticket</a>
-          <a href="/user/my-tickets">📄 My Tickets</a>
+          <a href="/user/raise-ticket" className="action-btn primary">
+            ➕ Raise Ticket
+          </a>
+
+          <a href="/user/my-tickets" className="action-btn secondary">
+            📄 My Tickets
+          </a>
         </div>
       </div>
-    </main>
-  </div>
-);
-
-
+    </div>
+  );
 };
 
 export default Dashboard;

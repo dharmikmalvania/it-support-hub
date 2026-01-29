@@ -6,37 +6,101 @@ import Register from "./pages/auth/Register";
 import Dashboard from "./pages/user/Dashboard";
 import RaiseTicket from "./pages/user/RaiseTicket";
 import MyTickets from "./pages/user/MyTickets";
-import TicketHistory from "./pages/user/TicketHistory";
-import Feedback from "./pages/user/Feedback";
+import History from "./pages/user/History";
+// import Feedback from "./pages/user/Feedback";
+import Sidebar from "./components/Sidebar";
 
-const App = () => {
+const PrivateRoute = ({ children }) => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  return userInfo?.token ? children : <Navigate to="/login" />;
+};
 
+function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* DEFAULT */}
-        <Route
-          path="/"
-          element={<Navigate to={userInfo ? "/user/dashboard" : "/login"} />}
-        />
 
         {/* AUTH */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* USER PAGES */}
-        <Route path="/user/dashboard" element={<Dashboard />} />
-        <Route path="/user/raise-ticket" element={<RaiseTicket />} />
-        <Route path="/user/my-tickets" element={<MyTickets />} />
-        <Route path="/user/ticket-history" element={<TicketHistory />} />
-        <Route path="/user/feedback/:id" element={<Feedback />} />
+        {/* USER */}
+        <Route
+          path="/user/dashboard"
+          element={
+            <PrivateRoute>
+              <div className="user-layout">
+                <Sidebar />
+                <div className="main-content">
+                  <Dashboard />
+                </div>
+              </div>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/user/raise-ticket"
+          element={
+            <PrivateRoute>
+              <div className="user-layout">
+                <Sidebar />
+                <div className="main-content">
+                  <RaiseTicket />
+                </div>
+              </div>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/user/my-tickets"
+          element={
+            <PrivateRoute>
+              <div className="user-layout">
+                <Sidebar />
+                <div className="main-content">
+                  <MyTickets />
+                </div>
+              </div>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/user/history"
+          element={
+            <PrivateRoute>
+              <div className="user-layout">
+                <Sidebar />
+                <div className="main-content">
+                  <History />
+                </div>
+              </div>
+            </PrivateRoute>
+          }
+        />
+
+        {/* <Route
+          path="/user/feedback/:id"
+          element={
+            <PrivateRoute>
+              <div className="user-layout">
+                <Sidebar />
+                <div className="main-content">
+                  <Feedback />
+                </div>
+              </div>
+            </PrivateRoute>
+          }
+        /> */}
 
         {/* FALLBACK */}
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/login" />} />
+
       </Routes>
     </BrowserRouter>
   );
-};
+}
 
 export default App;
