@@ -7,30 +7,52 @@ const ticketSchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
+
     title: {
       type: String,
       required: true,
     },
+
     category: {
       type: String,
       required: true,
     },
+
     priority: {
       type: String,
       enum: ["Low", "Medium", "High"],
       default: "Low",
     },
+
     description: {
       type: String,
       required: true,
     },
+
     attachment: {
-      type: String, // file path (future use)
+      type: String,
+      default: null,
     },
+
     status: {
       type: String,
       enum: ["Open", "Closed"],
       default: "Open",
+    },
+
+    // ✅ FEEDBACK (BUSINESS LOGIC)
+    feedback: {
+      rating: {
+        type: Number,
+        min: 1,
+        max: 5,
+      },
+      comment: {
+        type: String,
+      },
+      submittedAt: {
+        type: Date,
+      },
     },
   },
   { timestamps: true }

@@ -1,29 +1,20 @@
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import "../styles/sidebar.css";
 
 const Sidebar = () => {
-  const navigate = useNavigate();
-
-  const logoutHandler = () => {
-    localStorage.removeItem("userInfo");
-    navigate("/login");
-  };
-
   return (
-    <div className="sidebar">
-      <h2>IT Support</h2>
+    <aside className="sidebar">
+      <div className="sidebar-logo">
+        <span>IT</span> Support
+      </div>
 
-      <nav>
-        <Link to="/">Dashboard</Link>
-        <Link to="/raise-ticket">Raise Ticket</Link>
-        <Link to="/my-tickets">My Tickets</Link>
-
-
-        {/* 🔴 LOGOUT */}
-        <button className="logout-btn" onClick={logoutHandler}>
-          Logout
-        </button>
+      <nav className="sidebar-nav">
+        <NavLink to="/user/dashboard">Dashboard</NavLink>
+       <NavLink to="/user/raise-ticket">Raise Ticket</NavLink> 
+        <NavLink to="/user/my-tickets">My Tickets</NavLink>
+        <NavLink to="/user/logout">Logout</NavLink>
       </nav>
-    </div>
+    </aside>
   );
 };
 

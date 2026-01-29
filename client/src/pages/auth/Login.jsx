@@ -28,7 +28,7 @@ const Login = () => {
     localStorage.setItem("userInfo", JSON.stringify(data));
 
     // ✅ FORCE REDIRECT (SAFE)
-    window.location.href = "/Dashboard";
+    window.location.href = "/user/Dashboard";
 
   } catch (err) {
     setError(err.response?.data?.message || "Invalid email or password");

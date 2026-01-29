@@ -8,27 +8,26 @@ const storage = multer.diskStorage({
   filename(req, file, cb) {
     cb(
       null,
-      `${Date.now()}-${file.originalname.replace(/\s+/g, "")}`
+      `${Date.now()}-${file.originalname}`
     );
   },
 });
 
 const fileFilter = (req, file, cb) => {
-  const filetypes = /jpg|jpeg|png|pdf/;
-  const extname = filetypes.test(
-    path.extname(file.originalname).toLowerCase()
-  );
-
-  if (extname) {
+  const ext = path.extname(file.originalname);
+  if (
+    ext === ".jpg" ||
+    ext === ".jpeg" ||
+    ext === ".png" ||
+    ext === ".pdf"
+  ) {
     cb(null, true);
   } else {
-    cb(new Error("Images/PDF only"));
+    cb(new Error("Only images or PDFs allowed"));
   }
 };
 
-const upload = multer({
+export const upload = multer({
   storage,
   fileFilter,
 });
-
-export default upload;

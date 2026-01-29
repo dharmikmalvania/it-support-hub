@@ -1,0 +1,144 @@
+/* ===== PAGE LAYOUT ===== */
+.myticket-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+/* ===== PAGE HEADER ===== */
+.myticket-header {
+  margin-bottom: 28px;
+}
+
+.myticket-header h1 {
+  font-size: 30px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.myticket-header p {
+  margin-top: 6px;
+  color: #6b7280;
+}
+
+/* ===== TICKETS TABLE ===== */
+.ticket-table-wrapper {
+  background: #ffffff;
+  border-radius: 22px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
+}
+
+.ticket-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ticket-table th {
+  padding: 16px;
+  text-align: left;
+  font-size: 14px;
+  color: #6b7280;
+  background: #f9fafb;
+}
+
+.ticket-table td {
+  padding: 18px 16px;
+  border-top: 1px solid #f1f5f9;
+  font-size: 15px;
+  color: #111827;
+}
+
+/* ===== STATUS BADGES ===== */
+.status {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status.open {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+}
+
+.status.closed {
+  background: rgba(16, 185, 129, 0.15);
+  color: #059669;
+}
+
+/* ===== ACTION BUTTONS ===== */
+.ticket-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn,
+.close-btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.edit-btn {
+  background: #6366f1;
+  color: white;
+}
+
+.edit-btn:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+}
+
+.close-btn {
+  background: #ef4444;
+  color: white;
+}
+
+.close-btn:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+.feedback-btn {
+  padding: 8px 14px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.feedback-btn:hover {
+  opacity: 0.9;
+}
+
+.feedback-done {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+
+/* ===== EMPTY STATE ===== */
+.no-tickets {
+  text-align: center;
+  padding: 60px;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .myticket-page {
+    padding: 20px;
+  }
+
+  .ticket-actions {
+    flex-direction: column;
+  }
+}

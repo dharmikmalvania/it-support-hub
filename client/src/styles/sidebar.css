@@ -1,0 +1,75 @@
+.sidebar {
+  position: fixed;
+  left: 24px;
+  top: 24px;
+  bottom: 24px;
+  width: 270px; /* ⬅️ KEY FIX */
+  background: linear-gradient(180deg, #0f172a, #020617);
+  border-radius: 24px;
+  padding: 32px 22px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* LOGO */
+.sidebar-logo {
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.sidebar-logo span {
+  color: #6366f1;
+}
+
+/* NAV */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.sidebar-nav a {
+  padding: 14px 18px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #c7d2fe;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.sidebar-nav a:hover {
+  background: rgba(99, 102, 241, 0.18);
+  color: #ffffff;
+}
+
+/* ACTIVE */
+.sidebar-nav a.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
+  box-shadow: 0 14px 30px rgba(99, 102, 241, 0.45);
+}
+
+/* LOGOUT (OPTIONAL STYLE) */
+.sidebar-nav a:last-child {
+  margin-top: auto;
+  background: rgba(172, 30, 30, 0.267);
+  color: #fecaca;
+}
+
+.sidebar-nav a:last-child:hover {
+  background: rgba(211, 14, 14, 0.66);
+  color: white;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .sidebar {
+    display: none;
+  }
+}

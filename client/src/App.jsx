@@ -1,51 +1,38 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import Dashboard from "./pages/Dashboard";
-import RaiseTicket from "./pages/RaiseTicket";
-import Sidebar from "./components/Sidebar";
-import "./styles/dashboard.css";
-import MyTickets from "./pages/MyTickets";
-import EditTicket from "./pages/EditTicket";
+
+import Dashboard from "./pages/user/Dashboard";
+import RaiseTicket from "./pages/user/RaiseTicket";
+import MyTickets from "./pages/user/MyTickets";
+import EditTicket from "./pages/user/EditTicket";
+import Feedback from "./pages/user/Feedback";
+
+import UserLayout from "./layouts/UserLayout";
 
 function App() {
   return (
-    <Routes>
-      {/* AUTH ROUTES */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+    <BrowserRouter>
+      <Routes>
+        {/* PUBLIC ROUTES */}
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-      {/* USER ROUTES WITH SIDEBAR */}
-      <Route path="/Dashboard" element={<Dashboard />} />
-      <Route
-        path="/"
-        element={
-          <div className="layout">
-            <Sidebar />
-            <div className="main-content">
-              <Dashboard />
-            </div>
-          </div>
-        }
-      />
+        {/* PROTECTED USER ROUTES */}
+        <Route path="/user" element={<UserLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="raise-ticket" element={<RaiseTicket />} />
+          <Route path="my-tickets" element={<MyTickets />} />
+          <Route path="edit-ticket/:id" element={<EditTicket />} />
+          <Route path="feedback/:id" element={<Feedback />} />
+        </Route>
 
-      <Route
-        path="/raise-ticket"
-        element={
-          <div className="layout">
-            <Sidebar />
-            <div className="main-content">
-              <RaiseTicket />
-            </div>
-          </div>
-        }
-      />
-
-      {/* FALLBACK */}
-      <Route path="*" element={<Navigate to="/login" />} />
-      <Route path="/my-tickets" element={<MyTickets />} />
-      <Route path="/edit-ticket/:id" element={<EditTicket />} />
-    </Routes>
+        {/* FALLBACK */}
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
