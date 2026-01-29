@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import Sidebar from "../../components/sidebar";
+import Sidebar from "../../components/Sidebar";
 import "../../styles/ticketforms.css";
 
 const EditTicket = () => {
@@ -31,6 +31,14 @@ const EditTicket = () => {
   }, []);
 
   const fetchTicket = async () => {
+
+     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+    // ✅ SAFETY CHECK
+    if (!userInfo || !userInfo.token) {
+      console.warn("No user token found");
+      return;
+    }
     try {
       const res = await axios.get(
         `http://localhost:5000/api/tickets/${id}`,

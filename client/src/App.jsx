@@ -6,42 +6,37 @@ import Register from "./pages/auth/Register";
 import Dashboard from "./pages/user/Dashboard";
 import RaiseTicket from "./pages/user/RaiseTicket";
 import MyTickets from "./pages/user/MyTickets";
-import EditTicket from "./pages/user/EditTicket";
+import TicketHistory from "./pages/user/TicketHistory";
 import Feedback from "./pages/user/Feedback";
-import TicketHistory from "./pages/user/TicketHistory"; // ✅ ADD THIS
 
-import UserLayout from "./layouts/UserLayout";
+const App = () => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
-function App() {
   return (
-    
     <BrowserRouter>
-    <div style={{ padding: "40px", fontSize: "24px" }}>
-      LOGIN PAGE TEST
-    </div>
       <Routes>
-        {/* PUBLIC ROUTES */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        {/* DEFAULT */}
+        <Route
+          path="/"
+          element={<Navigate to={userInfo ? "/user/dashboard" : "/login"} />}
+        />
+
+        {/* AUTH */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* PROTECTED USER ROUTES */}
-        <Route path="/user" element={<UserLayout />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="raise-ticket" element={<RaiseTicket />} />
-          <Route path="my-tickets" element={<MyTickets />} />
-          <Route path="edit-ticket/:id" element={<EditTicket />} />
-          <Route path="feedback/:id" element={<Feedback />} />       {/* ✅ FIXED */}
-          <Route path="ticket-history" element={<TicketHistory />} /> {/* ✅ FIXED */}
-        </Route>
+        {/* USER PAGES */}
+        <Route path="/user/dashboard" element={<Dashboard />} />
+        <Route path="/user/raise-ticket" element={<RaiseTicket />} />
+        <Route path="/user/my-tickets" element={<MyTickets />} />
+        <Route path="/user/ticket-history" element={<TicketHistory />} />
+        <Route path="/user/feedback/:id" element={<Feedback />} />
 
         {/* FALLBACK */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
-    
   );
-  
-}
+};
 
 export default App;

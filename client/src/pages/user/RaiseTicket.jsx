@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import Sidebar from "../../components/sidebar";
+import Sidebar from "../../components/Sidebar";
 import "../../styles/ticketforms.css";
 
 const RaiseTicket = () => {
@@ -10,11 +10,16 @@ const RaiseTicket = () => {
   const [description, setDescription] = useState("");
   const [attachment, setAttachment] = useState(null);
 
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
+    // ✅ SAFETY CHECK
+    if (!userInfo || !userInfo.token) {
+      console.warn("No user token found");
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append("title", title);

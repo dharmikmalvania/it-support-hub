@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Sidebar from "../../components/sidebar";
+import Sidebar from "../../components/Sidebar";
 import "../../styles/myticket.css";
 
 const MyTickets = () => {
   const [tickets, setTickets] = useState([]);
   const navigate = useNavigate();
 
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   // 🔹 Fetch user tickets
   useEffect(() => {
     const fetchTickets = async () => {
+
+       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+    // ✅ SAFETY CHECK
+    if (!userInfo || !userInfo.token) {
+      console.warn("No user token found");
+      return;
+    }
       try {
         const res = await axios.get(
           "http://localhost:5000/api/tickets/my",

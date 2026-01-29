@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Sidebar from "../../components/sidebar";
+import Sidebar from "../../components/Sidebar";
 import "../../styles/dashboard.css";
 
 const Dashboard = () => {
@@ -14,6 +14,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchStats = async () => {
+
+ const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+    // ✅ SAFETY CHECK
+    if (!userInfo || !userInfo.token) {
+      console.warn("No user token found");
+      return;
+    }
+
       try {
         const res = await axios.get(
           "http://localhost:5000/api/tickets/stats",
