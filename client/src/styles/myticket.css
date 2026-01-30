@@ -143,3 +143,11 @@
     flex-direction: column;
   }
 }
+.user-layout {
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+}

@@ -74,3 +74,11 @@
   color: #64748b;
   font-style: italic;
 }
+.user-layout {
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+}

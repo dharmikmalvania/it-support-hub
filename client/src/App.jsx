@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -6,49 +6,44 @@ import Register from "./pages/auth/Register";
 import Dashboard from "./pages/user/Dashboard";
 import MyTickets from "./pages/user/MyTickets";
 import RaiseTicket from "./pages/user/RaiseTicket";
-import EditTicket from "./pages/user/EditTicket";
-import Feedback from "./pages/user/Feedback";
 import History from "./pages/user/History";
+import EditTicket from "./pages/user/EditTicket";
 import TicketDetail from "./pages/user/TicketDetail";
 
-import Sidebar from "./components/Sidebar";
-import PrivateRoute from "./components/ProtectedRoute";
-
 function App() {
-  return (
-    <Router>
-      <Routes>
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
-        {/* Public */}
+  return (
+    <BrowserRouter>
+      <Routes>
+       
+        <Route
+          path="/"
+          element={
+            userInfo ? (
+              <Navigate to="/user/dashboard" />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+        {/* AUTH */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* User */}
-        <Route
-  path="/user/*"
-  element={
-    <PrivateRoute>
-      <div className="user-layout">
-        <Sidebar />
-        <div className="main-content">
-          <Routes>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="raise-ticket" element={<RaiseTicket />} />
-            <Route path="my-tickets" element={<MyTickets />} />
-            <Route path="edit-ticket/:id" element={<EditTicket />} />
-            <Route path="feedback/:id" element={<Feedback />} />
-            <Route path="history" element={<History />} />
-            <Route path="/user/ticket/:id" element={<TicketDetail />} />
-          </Routes>
-        </div>
-      </div>
-    </PrivateRoute>
-  }
-/>
+        {/* USER */}
+        <Route path="/user/dashboard" element={<Dashboard />} />
+        <Route path="/user/raise-ticket" element={<RaiseTicket />} />
+        <Route path="/user/my-tickets" element={<MyTickets />} />
+        <Route path="/user/history" element={<History />} />
+         <Route path="/user/edit-ticket/:id" element={<EditTicket />} />
+        <Route path="/user/ticket/:id" element={<TicketDetail />} />
 
-
+        {/* FALLBACK */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 

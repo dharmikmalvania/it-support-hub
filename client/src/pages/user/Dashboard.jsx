@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Sidebar from "../../components/Sidebar";
 import "../../styles/dashboard.css";
 
 const Dashboard = () => {
@@ -12,8 +13,6 @@ const Dashboard = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   useEffect(() => {
-    if (!userInfo?.token) return;
-
     const fetchStats = async () => {
       try {
         const res = await axios.get(
@@ -24,10 +23,9 @@ const Dashboard = () => {
             },
           }
         );
-
         setStats(res.data);
-      } catch (error) {
-        console.error("Failed to load dashboard stats", error);
+      } catch (err) {
+        console.error("Failed to load stats");
       }
     };
 
@@ -35,46 +33,31 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="dashboard-page">
-      {/* HEADER */}
-      <div className="dashboard-header">
+    <div className="user-layout">
+      {/* ✅ SIDEBAR */}
+      <Sidebar />
+
+      {/* ✅ MAIN CONTENT */}
+      <div className="main-content">
         <h1>User Dashboard</h1>
-        <p className="welcome-text">
-          Welcome back 👋 Here’s your support overview
-        </p>
-      </div>
+        <p>Welcome back 👋 Here’s your support overview</p>
 
-      {/* STATS CARDS */}
-      <div className="dashboard-cards">
-        <div className="card">
-          <h3>Total Tickets</h3>
-          <p className="card-value">{stats.total}</p>
-        </div>
+        <h3>Total Tickets</h3>
+        <p>{stats.total}</p>
 
-        <div className="card">
-          <h3>Open Tickets</h3>
-          <p className="card-value">{stats.open}</p>
-        </div>
+        <h3>Open Tickets</h3>
+        <p>{stats.open}</p>
 
-        <div className="card">
-          <h3>Closed Tickets</h3>
-          <p className="card-value">{stats.closed}</p>
-        </div>
-      </div>
+        <h3>Closed Tickets</h3>
+        <p>{stats.closed}</p>
 
-      {/* QUICK ACTIONS */}
-      <div className="dashboard-section">
         <h2>Quick Actions</h2>
-
-        <div className="quick-actions">
-          <a href="/user/raise-ticket" className="action-btn primary">
-            ➕ Raise Ticket
-          </a>
-
-          <a href="/user/my-tickets" className="action-btn secondary">
-            📄 My Tickets
-          </a>
-        </div>
+        <button onClick={() => (window.location.href = "/user/raise-ticket")}>
+          Raise Ticket
+        </button>
+        <button onClick={() => (window.location.href = "/user/my-tickets")}>
+          My Tickets
+        </button>
       </div>
     </div>
   );
