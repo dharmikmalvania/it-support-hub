@@ -1,0 +1,19 @@
+.ticket-card,
+.feedback-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 14px;
+  margin-top: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.description-box {
+  background: #f8fafc;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 8px;
+}
+
+.feedback-card {
+  border-left: 5px solid #6366f1;
+}
