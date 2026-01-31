@@ -1,5 +1,10 @@
 import Ticket from "../models/Ticket.js";
 import Notification from "../models/Notification.js";
+import User from "../models/User.js";
+import sendEmail from "../utils/sendEmail.js";
+import {ticketClosedEmailTemplate,} from "../utils/emailTemplates.js";
+
+
 
 // DASHBOARD STATS
 export const getTicketStats = async (req, res) => {
@@ -17,26 +22,44 @@ export const getTicketStats = async (req, res) => {
    CREATE TICKET
 ========================= */
 
-
 export const createTicket = async (req, res) => {
-  const { title, category, priority, description } = req.body;
+  try {
+    const { title, category, priority, description } = req.body;
 
-  const ticket = await Ticket.create({
-    user: req.user._id,
-    title,
-    category,
-    priority,
-    description,
-  });
+    const ticket = await Ticket.create({
+      user: req.user.id,
+      title,
+      category,
+      priority,
+      description,
+    });
 
-  // ✅ ADD THIS BLOCK
-  await Notification.create({
-    user: req.user._id,
-    message: "Your ticket has been created successfully",
-  });
+    // 🔹 get user email
+    const user = await User.findById(req.user.id);
 
-  res.status(201).json(ticket);
+    // 🔹 send email
+    await sendEmail(
+      user.email,
+      "🎫 Ticket Created - IT Support Hub",
+      `
+        <h2>Your ticket has been created</h2>
+        <p><strong>Title:</strong> ${title}</p>
+        <p><strong>Category:</strong> ${category}</p>
+        <p><strong>Priority:</strong> ${priority}</p>
+        <p><strong>Description:</strong> ${description}</p>
+        <p><strong>Status:</strong> Open</p>
+        <br />
+        <p>Our support team will contact you soon.</p>
+      `
+    );
+
+    res.status(201).json(ticket);
+  } catch (error) {
+    console.error("CREATE TICKET ERROR:", error);
+    res.status(500).json({ message: "Failed to create ticket" });
+  }
 };
+
 
 
 
@@ -98,17 +121,37 @@ export const updateTicket = async (req, res) => {
    CLOSE TICKET
 ========================= */
 export const closeTicket = async (req, res) => {
-  const ticket = await Ticket.findById(req.params.id);
+  try {
+    const ticket = await Ticket.findById(req.params.id).populate("user");
 
-  if (!ticket) {
-    return res.status(404).json({ message: "Ticket not found" });
+    if (!ticket) {
+      return res.status(404).json({ message: "Ticket not found" });
+    }
+
+    ticket.status = "Closed";
+    await ticket.save();
+
+    // 🔹 send closure email
+    await sendEmail(
+      ticket.user.email,
+      "✅ Ticket Closed - IT Support Hub",
+      `
+        <h2>Your ticket has been resolved</h2>
+        <p><strong>Title:</strong> ${ticket.title}</p>
+        <p><strong>Status:</strong> Closed</p>
+        <br />
+        <p>Thank you for using IT Support Hub.</p>
+        <p>If you are satisfied, please leave feedback.</p>
+      `
+    );
+
+    res.json(ticket);
+  } catch (error) {
+    console.error("CLOSE TICKET ERROR:", error);
+    res.status(500).json({ message: "Failed to close ticket" });
   }
-
-  ticket.status = "Closed";
-  await ticket.save();
-
-  res.json({ message: "Ticket closed successfully" });
 };
+
 
 /* =========================
    SUBMIT FEEDBACK
@@ -145,29 +188,33 @@ export const submitFeedback = async (req, res) => {
   res.json({ message: "Feedback submitted successfully" });
 };
 
+
+
 export const closeTicketWithFeedback = async (req, res) => {
-  const { rating, comment } = req.body;
+  try {
+    console.log("FEEDBACK HIT");
+    console.log("PARAM ID:", req.params.id);
+    console.log("BODY:", req.body);
 
-  const ticket = await Ticket.findById(req.params.id);
+    const { rating, comment } = req.body;
 
-  if (!ticket) {
-    return res.status(404).json({ message: "Ticket not found" });
+    const ticket = await Ticket.findById(req.params.id).populate("user");
+    if (!ticket) {
+      return res.status(404).json({ message: "Ticket not found" });
+    }
+
+    ticket.status = "Closed";
+    ticket.feedback = { rating, comment };
+    await ticket.save();
+
+    res.json({ message: "Feedback submitted successfully" });
+  } catch (error) {
+    console.error("BACKEND FEEDBACK ERROR:", error);
+    res.status(500).json({ message: "Server error" });
   }
-
-  if (ticket.user.toString() !== req.user.id) {
-    return res.status(401).json({ message: "Not authorized" });
-  }
-
-  ticket.status = "Closed";
-  ticket.feedback = {
-    rating,
-    comment,
-    createdAt: new Date(),
-  };
-
-  await ticket.save();
-
-  res.json({ message: "Ticket closed with feedback" });
 };
+
+
+
 
 

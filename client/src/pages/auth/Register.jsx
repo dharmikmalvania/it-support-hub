@@ -40,11 +40,10 @@ const Register = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
-  name,
-  email,
-  password,
-});
+    const res = await axios.post(
+  "http://localhost:5000/api/auth/register",
+  { name, email, password }
+);
 
 
       // ✅ GO TO OTP PAGE
@@ -124,3 +123,4 @@ const Register = () => {
 };
 
 export default Register;
+

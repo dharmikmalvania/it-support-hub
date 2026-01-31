@@ -108,6 +108,7 @@ return (
                       </span>
                     </td>
  <td>
+  {/* 🟢 OPEN TICKET ACTIONS */}
   {ticket.status === "Open" && (
     <div className="ticket-actions">
       <button
@@ -122,15 +123,17 @@ return (
       </button>
 
       <button
-  className="close-btn"
-  onClick={() => navigate(`/user/feedback/${ticket._id}`)}
->
-  Close
-</button>
-
+        className="close-btn"
+        onClick={() =>
+          navigate(`/user/feedback/${ticket._id}`)
+        }
+      >
+        Close & Feedback
+      </button>
     </div>
   )}
 
+  {/* 🟡 CLOSED BUT FEEDBACK NOT GIVEN */}
   {ticket.status === "Closed" && !ticket.feedback && (
     <button
       className="feedback-btn"
@@ -142,12 +145,14 @@ return (
     </button>
   )}
 
+  {/* ✅ CLOSED & FEEDBACK SUBMITTED */}
   {ticket.status === "Closed" && ticket.feedback && (
     <span className="feedback-done">
       ✔ Feedback Submitted
     </span>
   )}
 </td>
+
 
                   </tr>
                 ))}
