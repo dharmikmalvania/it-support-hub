@@ -1,4 +1,5 @@
 import Ticket from "../models/Ticket.js";
+import Notification from "../models/Notification.js";
 
 // DASHBOARD STATS
 export const getTicketStats = async (req, res) => {
@@ -15,25 +16,28 @@ export const getTicketStats = async (req, res) => {
 /* =========================
    CREATE TICKET
 ========================= */
+
+
 export const createTicket = async (req, res) => {
-  try {
-    const { title, category, priority, description } = req.body;
+  const { title, category, priority, description } = req.body;
 
-    const ticket = await Ticket.create({
-      user: req.user._id,
-      title,
-      category,
-      priority,
-      description,
-      attachment: req.file ? req.file.filename : null,
-    });
+  const ticket = await Ticket.create({
+    user: req.user._id,
+    title,
+    category,
+    priority,
+    description,
+  });
 
-    res.status(201).json(ticket);
-  } catch (error) {
-    console.error("CREATE TICKET ERROR:", error);
-    res.status(500).json({ message: "Failed to create ticket" });
-  }
+  // ✅ ADD THIS BLOCK
+  await Notification.create({
+    user: req.user._id,
+    message: "Your ticket has been created successfully",
+  });
+
+  res.status(201).json(ticket);
 };
+
 
 
 /* =========================

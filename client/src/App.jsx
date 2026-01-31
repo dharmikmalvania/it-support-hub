@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-
+import VerifyOtp from "./pages/auth/VerifyOtp";
 import Dashboard from "./pages/user/Dashboard";
 import MyTickets from "./pages/user/MyTickets";
 import RaiseTicket from "./pages/user/RaiseTicket";
@@ -31,6 +31,8 @@ function App() {
         {/* AUTH */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
+
 
         {/* USER */}
         <Route path="/user/dashboard" element={<Dashboard />} />

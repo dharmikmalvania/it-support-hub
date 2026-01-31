@@ -15,8 +15,6 @@ const Register = () => {
   });
 
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const { name, email, password, confirmPassword, terms } = formData;
 
@@ -31,99 +29,96 @@ const Register = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
 
+    // ✅ VALIDATIONS
     if (password !== confirmPassword) {
       return setError("Passwords do not match");
     }
 
     if (!terms) {
-      return setError("Please accept Terms & Conditions");
+      return setError("You must accept Terms & Conditions");
     }
 
     try {
-      setLoading(true);
+      const res = await axios.post("http://localhost:5000/api/auth/register", {
+  name,
+  email,
+  password,
+});
 
-      await axios.post("http://localhost:5000/api/auth/register", {
-        name,
-        email,
-        password,
+
+      // ✅ GO TO OTP PAGE
+      navigate("/verify-otp", {
+        state: { userId: res.data.userId },
       });
 
-      setSuccess("Account created successfully. Redirecting to login...");
-      setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
     <div className="auth-container">
-      <div className="auth-card">
+      <form className="auth-card" onSubmit={onSubmit}>
         <h2>Create Account</h2>
 
-        {error && <div className="error-msg">{error}</div>}
-        {success && <div className="success-msg">{success}</div>}
+        {error && <p className="error-text">{error}</p>}
 
-        <form onSubmit={onSubmit} className="auth-form">
+        <input
+          type="text"
+          name="name"
+          placeholder="Full Name"
+          value={name}
+          onChange={onChange}
+          required
+        />
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Email Address"
+          value={email}
+          onChange={onChange}
+          required
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={password}
+          onChange={onChange}
+          required
+        />
+
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={onChange}
+          required
+        />
+
+        <label className="terms">
           <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            value={name}
+            type="checkbox"
+            name="terms"
+            checked={terms}
             onChange={onChange}
-            required
           />
+          I agree to the Terms & Conditions
+        </label>
 
-          <input
-            type="email"
-            name="email"
-            placeholder="Email Address"
-            value={email}
-            onChange={onChange}
-            required
-          />
-
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={password}
-            onChange={onChange}
-            required
-          />
-
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={onChange}
-            required
-          />
-
-          <div className="checkbox-group">
-            <input
-              type="checkbox"
-              name="terms"
-              checked={terms}
-              onChange={onChange}
-            />
-            <label>I agree to the Terms & Conditions</label>
-          </div>
-
-          <button type="submit" disabled={loading}>
-            {loading ? "Creating account..." : "Register"}
-          </button>
-        </form>
+        <button type="submit" className="auth-btn">
+          Register
+        </button>
 
         <p className="auth-footer">
-          Already have an account? <a href="/login">Login</a>
+          Already have an account?{" "}
+          <span onClick={() => navigate("/login")}>Login</span>
         </p>
-      </div>
+      </form>
     </div>
   );
 };
