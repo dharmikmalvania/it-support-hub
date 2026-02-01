@@ -3,6 +3,7 @@ import Notification from "../models/Notification.js";
 import User from "../models/User.js";
 import sendEmail from "../utils/sendEmail.js";
 import {ticketClosedEmailTemplate,} from "../utils/emailTemplates.js";
+import createNotification from "../utils/createNotification.js";
 
 
 
@@ -52,6 +53,13 @@ export const createTicket = async (req, res) => {
         <p>Our support team will contact you soon.</p>
       `
     );
+    
+
+      await createNotification(
+      req.user.id,
+        "🎫 Your ticket has been created successfully"
+    );
+
 
     res.status(201).json(ticket);
   } catch (error) {
@@ -145,6 +153,12 @@ export const closeTicket = async (req, res) => {
       `
     );
 
+    await createNotification(
+  ticket.user._id,
+  "✅ Your ticket has been closed"
+);
+
+
     res.json(ticket);
   } catch (error) {
     console.error("CLOSE TICKET ERROR:", error);
@@ -185,6 +199,12 @@ export const submitFeedback = async (req, res) => {
 
   await ticket.save();
 
+  await createNotification(
+  ticket.user._id,
+  "⭐ Thank you for submitting feedback"
+);
+
+  
   res.json({ message: "Feedback submitted successfully" });
 };
 

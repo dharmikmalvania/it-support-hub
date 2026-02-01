@@ -1,64 +1,132 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "../../components/sidebar";
 import "../../styles/dashboard.css";
 
 const Dashboard = () => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
   const [stats, setStats] = useState({
     total: 0,
     open: 0,
     closed: 0,
   });
 
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const [recentTickets, setRecentTickets] = useState([]);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get(
+        const headers = {
+          Authorization: `Bearer ${userInfo.token}`,
+        };
+
+        const statsRes = await axios.get(
           "http://localhost:5000/api/tickets/stats",
-          {
-            headers: {
-              Authorization: `Bearer ${userInfo.token}`,
-            },
-          }
+          { headers }
         );
-        setStats(res.data);
-      } catch (err) {
-        console.error("Failed to load stats");
+
+        const ticketsRes = await axios.get(
+          "http://localhost:5000/api/tickets/my",
+          { headers }
+        );
+
+        const notifRes = await axios.get(
+          "http://localhost:5000/api/notifications",
+          { headers }
+        );
+
+        setStats(statsRes.data);
+        setRecentTickets(ticketsRes.data.slice(0, 5));
+        setNotifications(notifRes.data.slice(0, 4));
+      } catch (error) {
+        console.error("Dashboard load failed");
       }
     };
 
-    fetchStats();
+    fetchData();
   }, []);
 
   return (
     <div className="user-layout">
-      {/* ✅ SIDEBAR */}
       <Sidebar />
 
-      {/* ✅ MAIN CONTENT */}
-      <div className="main-content">
-        <h1>User Dashboard</h1>
-        <p>Welcome back 👋 Here’s your support overview</p>
+      <main className="main-content">
+        {/* HEADER */}
+        <div className="dashboard-header">
+          <h1>Welcome 👋</h1>
+          <p>Manage your support tickets easily</p>
+        </div>
 
-        <h3>Total Tickets</h3>
-        <p>{stats.total}</p>
+        {/* QUICK ACTIONS */}
+        <div className="quick-actions">
+          <a href="/user/raise-ticket" className="qa-btn">
+            ➕ Raise Ticket
+          </a>
+          <a href="/user/my-tickets" className="qa-btn">
+            📂 My Tickets
+          </a>
+          <a href="/user/history" className="qa-btn">
+            🕒 History
+          </a>
+        </div>
 
-        <h3>Open Tickets</h3>
-        <p>{stats.open}</p>
+        {/* STATS */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <h3>Total Tickets</h3>
+            <span>{stats.total}</span>
+          </div>
+          <div className="stat-card">
+            <h3>Open</h3>
+            <span>{stats.open}</span>
+          </div>
+          <div className="stat-card">
+            <h3>Closed</h3>
+            <span>{stats.closed}</span>
+          </div>
+        </div>
 
-        <h3>Closed Tickets</h3>
-        <p>{stats.closed}</p>
+        {/* CONTENT GRID */}
+        <div className="dashboard-grid">
+          {/* RECENT TICKETS */}
+          <div className="panel">
+            <h2>Recent Tickets</h2>
+            {recentTickets.length === 0 ? (
+              <p className="muted">No tickets yet</p>
+            ) : (
+              <ul>
+                {recentTickets.map((t) => (
+                  <li key={t._id}>
+                    <span>{t.title}</span>
+                    <small className={t.status.toLowerCase()}>
+                      {t.status}
+                    </small>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
-        <h2>Quick Actions</h2>
-        <button onClick={() => (window.location.href = "/user/raise-ticket")}>
-          Raise Ticket
-        </button>
-        <button onClick={() => (window.location.href = "/user/my-tickets")}>
-          My Tickets
-        </button>
-      </div>
+          {/* NOTIFICATIONS */}
+          <div className="panel">
+            <h2>Notifications</h2>
+            {notifications.length === 0 ? (
+              <p className="muted">No notifications</p>
+            ) : (
+              <ul>
+                {notifications.map((n) => (
+                  <li key={n._id}>{n.message}</li>
+                ))}
+              </ul>
+            )}
+            <a href="/user/notifications" className="view-all">
+              View all →
+            </a>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };

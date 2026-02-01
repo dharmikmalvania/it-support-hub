@@ -1,0 +1,13 @@
+.user-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #222831;
+}
+
+.page-content {
+  flex: 1;
+  padding: 32px;
+  background: #222831;
+  color: #EEEEEE;
+  overflow-x: hidden;
+}
