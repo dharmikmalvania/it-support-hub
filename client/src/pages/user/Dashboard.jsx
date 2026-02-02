@@ -1,5 +1,5 @@
 // src/pages/Dashboard.jsx
-import "../../styles/dashboard.css";
+import "../..//styles/dashboard.css";
 
 const Dashboard = () => {
   return (
