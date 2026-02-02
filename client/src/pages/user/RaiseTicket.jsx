@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 
 
-import "../../styles/RaiseTicket.css";
+import "../../styles/raiseTicket.css";
 
 const RaiseTicket = () => {
   const [title, setTitle] = useState("");

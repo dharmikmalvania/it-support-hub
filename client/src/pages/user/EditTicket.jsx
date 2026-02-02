@@ -9,7 +9,7 @@ import axios from "axios";
   FaAlignLeft,
   FaSave,
 } from "react-icons/fa";
-import "../../styles/RaiseTicket.css"; // 👈 SAME CSS FILE
+import "../../styles/raiseTicket.css"; // 👈 SAME CSS FILE
 
 const EditTicket = () => {
   const { id } = useParams();
