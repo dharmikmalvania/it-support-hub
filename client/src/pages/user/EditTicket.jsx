@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import Sidebar from "../../components/Sidebar";
+
 import "../../styles/ticketforms.css";
 
 const EditTicket = () => {
@@ -91,7 +91,7 @@ const EditTicket = () => {
   return (
     <div className="user-layout">
       {/* SIDEBAR */}
-      <Sidebar />
+     
 
       {/* MAIN CONTENT */}
       <main className="main-content">

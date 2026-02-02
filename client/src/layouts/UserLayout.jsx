@@ -1,14 +1,14 @@
-import Sidebar from "../components/sidebar";
+import Sidebar from "../components/Sidebar";
 import { Outlet } from "react-router-dom";
-import "../styles/layout.css";
+import "../components/sidebar.css";
 
 const UserLayout = () => {
   return (
     <div className="user-layout">
       <Sidebar />
-      <div className="page-content">
+      <main className="page-content">
         <Outlet />
-      </div>
+      </main>
     </div>
   );
 };

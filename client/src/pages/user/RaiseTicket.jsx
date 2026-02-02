@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import Sidebar from "../../components/Sidebar";
+
 import "../../styles/ticketforms.css";
 
 const RaiseTicket = () => {
@@ -54,7 +54,7 @@ const RaiseTicket = () => {
   return (
     <div className="user-layout">
       {/* SIDEBAR */}
-      <Sidebar />
+    
 
       {/* MAIN CONTENT */}
       <main className="main-content">

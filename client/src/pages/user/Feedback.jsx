@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Sidebar from "../../components/Sidebar";
+
 
 const Feedback = () => {
   const { id } = useParams();
@@ -47,8 +47,7 @@ const Feedback = () => {
 
   return (
     <div className="user-layout">
-      <Sidebar />
-
+      
       <main className="main-content">
         <div className="ticket-form-page">
           <h1>Submit Feedback</h1>

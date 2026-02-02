@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Sidebar from "../../components/Sidebar";
 import "../../styles/ticketDetail.css";
 
 const TicketDetail = () => {
@@ -45,7 +44,7 @@ const TicketDetail = () => {
   // ✅ ALWAYS RENDER SOMETHING
   return (
     <div className="user-layout">
-      <Sidebar />
+     
 
       <div className="main-content">
         {loading && <p>Loading ticket...</p>}

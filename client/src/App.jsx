@@ -6,9 +6,15 @@ import RaiseTicket from "./pages/user/RaiseTicket";
 import MyTickets from "./pages/user/MyTickets";
 import History from "./pages/user/History";
 import Profile from "./pages/user/Profile";
+import Feedback from "./pages/user/Feedback";
+import EditTicket from "./pages/user/EditTicket";
+import TicketDetail from "./pages/user/TicketDetail";
+// import Notification from "./pages/user/Notifications";
+
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import { BsTicketDetailed } from "react-icons/bs";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("userInfo"));
@@ -16,23 +22,23 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* AUTH */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* USER PANEL */}
-        <Route
-          path="/user"
-          element={user ? <UserLayout /> : <Navigate to="/login" />}
-        >
-          <Route path="/user/dashboard" element={<Dashboard />} />
-          <Route path="/user/raise-ticket" element={<RaiseTicket />} />
-          <Route path="/user/my-tickets" element={<MyTickets />} />
-          <Route path="/user/history" element={<History />} />
-          <Route path="/user/profile" element={<Profile />} />
-        </Route>
+        {user && (
+          <Route path="/user" element={<UserLayout />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="raise-ticket" element={<RaiseTicket />} />
+            <Route path="my-tickets" element={<MyTickets />} />
+            <Route path="history" element={<History />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="feedback/:id" element={<Feedback/>} />
+            <Route path="edit-ticket/:id" element={<EditTicket/>} />
+            <Route path="ticket-detail/:id" element={<TicketDetail />} />
+            {/* <Route path="notifications" element={<Notifications />}/> */}
+          </Route>
+        )}
 
-        {/* DEFAULT */}
         <Route
           path="*"
           element={<Navigate to={user ? "/user/dashboard" : "/login"} />}

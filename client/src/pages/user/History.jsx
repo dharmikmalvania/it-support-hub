@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Sidebar from "../../components/Sidebar";
 import "../../styles/history.css";
 
 const History = () => {
@@ -55,8 +54,7 @@ const History = () => {
 
   return (
     <div className="user-layout">
-      <Sidebar />
-
+      
       <div className="main-content">
         <h1>Ticket History</h1>
         <p className="sub-text">

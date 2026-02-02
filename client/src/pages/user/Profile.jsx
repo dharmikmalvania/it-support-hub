@@ -1,36 +1,69 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import "../../styles/profile.css";
 
 const Profile = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
-  const [form, setForm] = useState({
+  const [activeTab, setActiveTab] = useState("basic");
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
+    emailNotifications: true,
   });
-
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if (userInfo) {
-      setForm({
-        name: userInfo.name,
-        email: userInfo.email,
-      });
-    }
+    if (!userInfo?.token) return;
+
+    const loadProfile = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:5000/api/users/profile",
+          {
+            headers: {
+              Authorization: `Bearer ${userInfo.token}`,
+            },
+          }
+        );
+
+        setFormData({
+          name: res.data.name || "",
+          email: res.data.email || "",
+          phone: res.data.phone || "",
+          emailNotifications: res.data.preferences?.emailNotifications ?? true,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    loadProfile();
   }, []);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   const updateProfile = async (e) => {
     e.preventDefault();
+    setMessage("");
+
     try {
-      const res = await axios.put(
+      await axios.put(
         "http://localhost:5000/api/users/profile",
-        form,
+        {
+          name: formData.name,
+          phone: formData.phone,
+          preferences: {
+            emailNotifications: formData.emailNotifications,
+          },
+        },
         {
           headers: {
             Authorization: `Bearer ${userInfo.token}`,
@@ -38,33 +71,99 @@ const Profile = () => {
         }
       );
 
-      localStorage.setItem("userInfo", JSON.stringify(res.data));
       setMessage("Profile updated successfully ✅");
-    } catch (err) {
+    } catch (error) {
       setMessage("Failed to update profile ❌");
     }
   };
 
   return (
-    <div className="profile-page">
-      <h1>My Profile</h1>
+    <div className="user-layout">
+      
 
-      {message && <p className="profile-msg">{message}</p>}
+      <main className="page-content">
+        <div className="profile-container">
+          <h1>User Profile</h1>
 
-      <form onSubmit={updateProfile} className="profile-form">
-        <label>Full Name</label>
-        <input
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
+          {/* Tabs */}
+          <div className="profile-tabs">
+            <button
+              className={activeTab === "basic" ? "active" : ""}
+              onClick={() => setActiveTab("basic")}
+            >
+              Basic Info
+            </button>
+            <button
+              className={activeTab === "preferences" ? "active" : ""}
+              onClick={() => setActiveTab("preferences")}
+            >
+              Preferences
+            </button>
+            <button
+              className={activeTab === "security" ? "active" : ""}
+              onClick={() => setActiveTab("security")}
+            >
+              Security
+            </button>
+          </div>
 
-        <label>Email</label>
-        <input value={form.email} disabled />
+          {/* Content */}
+          <form className="profile-card" onSubmit={updateProfile}>
+            {activeTab === "basic" && (
+              <>
+                <label>Full Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
 
-        <button type="submit">Update Profile</button>
-      </form>
+                <label>Email (read-only)</label>
+                <input type="email" value={formData.email} disabled />
+
+                <label>Phone</label>
+                <input
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="Optional"
+                />
+              </>
+            )}
+
+            {activeTab === "preferences" && (
+              <>
+                <label className="checkbox">
+                  <input
+                    type="checkbox"
+                    name="emailNotifications"
+                    checked={formData.emailNotifications}
+                    onChange={handleChange}
+                  />
+                  Receive email notifications
+                </label>
+              </>
+            )}
+
+            {activeTab === "security" && (
+              <p className="security-note">
+                🔒 Password change feature can be added later.
+              </p>
+            )}
+
+            {message && <p className="profile-message">{message}</p>}
+
+            {activeTab !== "security" && (
+              <button type="submit" className="save-btn">
+                Save Changes
+              </button>
+            )}
+          </form>
+        </div>
+      </main>
     </div>
   );
 };
