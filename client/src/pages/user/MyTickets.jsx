@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import {
+  FaEdit,
+  FaCommentDots,
+  FaCheckCircle,
+  FaTicketAlt,
+ 
+} from "react-icons/fa";
 import "../../styles/myticket.css";
 
 const MyTickets = () => {
@@ -67,26 +73,32 @@ const MyTickets = () => {
 
 return (
   <div className="user-layout">
-    {/* SIDEBAR */}
-   
-
-    {/* MAIN CONTENT */}
     <main className="main-content">
       <div className="myticket-page">
-        {/* PAGE HEADER */}
+        {/* HEADER */}
         <div className="myticket-header">
-          <h1>My Tickets</h1>
-          <p>View and manage your support tickets</p>
+          <div>
+            <h1>My Tickets</h1>
+            <p>View and manage your support tickets</p>
+          </div>
+          <div className="ticket-count">
+            <FaTicketAlt className="icon" />
+            <span>{tickets.length} Tickets</span>
+          </div>
         </div>
 
         {tickets.length === 0 ? (
-          <div className="no-tickets">No tickets found</div>
+          <div className="no-tickets">
+            <FaTicketAlt className="empty-icon" />
+            <h3>No tickets yet</h3>
+            <p>Your raised tickets will appear here</p>
+          </div>
         ) : (
           <div className="ticket-table-wrapper">
             <table className="ticket-table">
               <thead>
                 <tr>
-                  <th>Title</th>
+                  <th>Ticket</th>
                   <th>Category</th>
                   <th>Priority</th>
                   <th>Status</th>
@@ -96,64 +108,86 @@ return (
 
               <tbody>
                 {tickets.map((ticket) => (
-                  <tr key={ticket._id}>
-                    <td className="title-cell">{ticket.title}</td>
+                  <tr key={ticket._id} className="ticket-row">
+                    {/* TITLE */}
+                   <td className="title-cell">
+  <div className="ticket-title-wrap">
+    <span className="ticket-title">{ticket.title}</span>
+    <span className="ticket-sub">
+      Ticket ID: {ticket._id.slice(-6)}
+    </span>
+  </div>
+</td>
+
+
                     <td>{ticket.category}</td>
-                    <td>{ticket.priority}</td>
+
+                    {/* PRIORITY */}
+                    <td>
+                      <span
+                        className={`priority ${ticket.priority.toLowerCase()}`}
+                      >
+                        {ticket.priority}
+                      </span>
+                    </td>
+
+                    {/* STATUS */}
                     <td>
                       <span
                         className={`status ${ticket.status.toLowerCase()}`}
                       >
+                        <span className="status-dot" />
                         {ticket.status}
                       </span>
                     </td>
- <td>
-  {/* 🟢 OPEN TICKET ACTIONS */}
-  {ticket.status === "Open" && (
-    <div className="ticket-actions">
-      <button
-        className="edit-btn"
-        onClick={() =>
-          navigate(`/user/edit-ticket/${ticket._id}`, {
-            state: ticket,
-          })
-        }
-      >
-        Edit
-      </button>
 
-      <button
-        className="close-btn"
-        onClick={() =>
-          navigate(`/user/feedback/${ticket._id}`)
-        }
-      >
-        Close & Feedback
-      </button>
-    </div>
-  )}
+                    {/* ACTION */}
+                    <td>
+                      {ticket.status === "Open" && (
+                        <div className="ticket-actions">
+                          <button
+                            className="action-btn edit-btn"
+                            onClick={() =>
+                              navigate(`/user/edit-ticket/${ticket._id}`, {
+                                state: ticket,
+                              })
+                            }
+                          >
+                            <FaEdit />
+                            <span>Edit</span>
+                          </button>
 
-  {/* 🟡 CLOSED BUT FEEDBACK NOT GIVEN */}
-  {ticket.status === "Closed" && !ticket.feedback && (
-    <button
-      className="feedback-btn"
-      onClick={() =>
-        navigate(`/user/feedback/${ticket._id}`)
-      }
-    >
-      Give Feedback
-    </button>
-  )}
+                          <button
+                            className="action-btn close-btn"
+                            onClick={() =>
+                              navigate(`/user/feedback/${ticket._id}`)
+                            }
+                          >
+                            <FaCommentDots />
+                            <span>Close</span>
+                          </button>
+                        </div>
+                      )}
 
-  {/* ✅ CLOSED & FEEDBACK SUBMITTED */}
-  {ticket.status === "Closed" && ticket.feedback && (
-    <span className="feedback-done">
-      ✔ Feedback Submitted
-    </span>
-  )}
-</td>
+                      {ticket.status === "Closed" && !ticket.feedback && (
+                        <button
+                          className="action-btn feedback-btn"
+                          onClick={() =>
+                            navigate(`/user/feedback/${ticket._id}`)
+                          }
+                        >
+                          <FaCommentDots />
+                          <span>Feedback</span>
+                        </button>
+                      )}
 
-
+                      {ticket.status === "Closed" && ticket.feedback && (
+                        <span className="feedback-done">
+                          <FaCheckCircle />
+                          <span>Submitted</span>
+                        </span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -164,6 +198,8 @@ return (
     </main>
   </div>
 );
+
+
 
 
 };

@@ -1,13 +1,13 @@
-// src/layouts/UserLayout.jsx
 import Sidebar from "../components/sidebar";
 import { Outlet } from "react-router-dom";
-import "../components/sidebar.css";
+import "../styles/layout.css";
 
 const UserLayout = () => {
   return (
     <div className="user-layout">
       <Sidebar />
-      <main className="page-content">
+
+      <main className="user-content">
         <Outlet />
       </main>
     </div>

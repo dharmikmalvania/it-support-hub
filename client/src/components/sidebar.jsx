@@ -1,58 +1,57 @@
-// src/components/Sidebar.jsx
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   FaHome,
   FaTicketAlt,
-  FaHistory,
   FaUser,
-  FaPlus,
+  FaCog,
   FaSignOutAlt,
 } from "react-icons/fa";
-import "./sidebar.css";
+import "./Sidebar.css";
 
 const Sidebar = () => {
-  const navigate = useNavigate();
-
-  const logout = () => {
-    localStorage.removeItem("userInfo");
-    navigate("/login");
-  };
-
   return (
     <aside className="sidebar">
-      <div className="logo">IT</div>
+      <div className="logo">
+        <span className="logo-icon">💻</span>
+        <span className="logo-text">IT Support</span>
+      </div>
 
-      <nav>
-        <NavLink to="/user/dashboard">
+      <nav className="menu">
+        <NavLink to="/dashboard" className="menu-item">
           <FaHome />
           <span>Dashboard</span>
         </NavLink>
 
-        <NavLink to="/user/raise-ticket">
-          <FaPlus />
+        <NavLink to="/user/raise-ticket" className="menu-item">
+          <FaTicketAlt />
           <span>Raise Ticket</span>
         </NavLink>
 
-        <NavLink to="/user/my-tickets">
-          <FaTicketAlt />
+        <NavLink to="/user/my-tickets" className="menu-item">
+          <FaUser />
           <span>My Tickets</span>
         </NavLink>
 
-        <NavLink to="/user/history">
-          <FaHistory />
+       <NavLink to="/user/history" className="menu-item">
+          <FaCog />
           <span>History</span>
         </NavLink>
 
-        <NavLink to="/user/profile">
-          <FaUser />
+          <NavLink to="/user/profile" className="menu-item">
+          <FaCog />
           <span>Profile</span>
         </NavLink>
+
       </nav>
 
-      <button className="logout-btn" onClick={logout}>
-        <FaSignOutAlt />
-        <span>Logout</span>
-      </button>
+
+
+      <div className="logout">
+        <NavLink to="/logout" className="menu-item">
+          <FaSignOutAlt />
+          <span>Logout</span>
+        </NavLink>
+      </div>
     </aside>
   );
 };

@@ -52,20 +52,23 @@ const History = () => {
     );
   });
 
-  return (
-    <div className="user-layout">
-      
-      <div className="main-content">
-        <h1>Ticket History</h1>
-        <p className="sub-text">
-          View all your resolved support tickets
-        </p>
+return (
+  <div className="user-layout">
+    <main className="main-content">
+      <div className="history-page">
+        {/* HEADER */}
+        <div className="history-header">
+          <div>
+            <h1>Ticket History</h1>
+            <p>View all your resolved support tickets</p>
+          </div>
+        </div>
 
-        {/* 🔍 FILTERS */}
-        <div className="history-filters">
+        {/* FILTER CARD */}
+        <div className="history-filter-card">
           <input
             type="text"
-            placeholder="Search by title..."
+            placeholder="Search by ticket title"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -91,58 +94,83 @@ const History = () => {
           </select>
         </div>
 
-        {/* 📋 TABLE */}
+        {/* TABLE / LIST */}
         {filteredTickets.length === 0 ? (
-          <p className="no-data">No closed tickets found</p>
+          <div className="history-empty">
+            <p>No closed tickets found</p>
+          </div>
         ) : (
-          <table className="history-table">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>Feedback</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {filteredTickets.map((ticket) => (
-                <tr key={ticket._id}>
-                  <td>{ticket.title}</td>
-                  <td>{ticket.category}</td>
-                  <td>{ticket.priority}</td>
-                  <td>
-                    <span className="status closed">Closed</span>
-                  </td>
-                  <td>
-                    {ticket.feedback ? (
-                      <span className="badge success">
-                        Submitted
-                      </span>
-                    ) : (
-                      <span className="badge muted">—</span>
-                    )}
-                  </td>
-                  <td>
-                    <button
-                      className="view-btn"
-                      onClick={() =>
-                        navigate(`/user/ticket/${ticket._id}`)
-                      }
-                    >
-                      View
-                    </button>
-                  </td>
+          <div className="history-table-wrapper">
+            <table className="history-table">
+              <thead>
+                <tr>
+                  <th>Ticket</th>
+                  <th>Category</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Feedback</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {filteredTickets.map((ticket) => (
+                  <tr key={ticket._id} className="history-row">
+                    {/* TITLE */}
+                    <td className="history-title">
+                      <div className="title-wrap">
+                        <span className="title">{ticket.title}</span>
+                        <span className="sub-id">
+                          ID: {ticket._id.slice(-6)}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td>{ticket.category}</td>
+
+                    <td>
+                      <span
+                        className={`priority ${ticket.priority.toLowerCase()}`}
+                      >
+                        {ticket.priority}
+                      </span>
+                    </td>
+
+                    <td>
+                      <span className="status closed">Closed</span>
+                    </td>
+
+                    <td>
+                      {ticket.feedback ? (
+                        <span className="badge success">
+                          Submitted
+                        </span>
+                      ) : (
+                        <span className="badge muted">—</span>
+                      )}
+                    </td>
+
+                    <td>
+                      <button
+                        className="view-btn"
+                        onClick={() =>
+                          navigate(`/user/ticket/${ticket._id}`)
+                        }
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
-    </div>
-  );
+    </main>
+  </div>
+);
+
 };
 
 export default History;

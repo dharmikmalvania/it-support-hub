@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-
-import "../../styles/ticketforms.css";
+  import {
+  FaHeading,
+  FaLayerGroup,
+  FaFlag,
+  FaPaperclip,
+  FaAlignLeft,
+  FaSave,
+} from "react-icons/fa";
+import "../../styles/RaiseTicket.css"; // 👈 SAME CSS FILE
 
 const EditTicket = () => {
   const { id } = useParams();
@@ -88,68 +95,122 @@ const EditTicket = () => {
     }
   };
 
-  return (
-    <div className="user-layout">
-      {/* SIDEBAR */}
-     
 
-      {/* MAIN CONTENT */}
-      <main className="main-content">
-        <div className="ticket-form-page">
-          <div className="ticket-form-header">
-            <h1>Edit Ticket</h1>
-            <p>Update your ticket details</p>
-          </div>
 
+return (
+  <div className="user-layout">
+    <main className="main-content">
+      <div className="ticket-form-page">
+        <div className="ticket-layout">
+
+          {/* LEFT – FORM */}
           <div className="ticket-form-card">
+            <div className="ticket-form-header">
+              <h1>Edit Ticket</h1>
+              <p>Update your ticket details</p>
+            </div>
+
             <form className="ticket-form" onSubmit={handleSubmit}>
-              <input
-                type="text"
-                placeholder="Ticket Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
+              {/* Title */}
+              <div className="form-group">
+                <label>
+                  <FaHeading /> Ticket Title
+                </label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                />
+              </div>
 
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                required
-              >
-                <option value="">Select Category</option>
-                <option value="Hardware">Hardware</option>
-                <option value="Software">Software</option>
-                <option value="Network">Network</option>
-              </select>
+              {/* Category */}
+              <div className="form-group">
+                <label>
+                  <FaLayerGroup /> Category
+                </label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  required
+                >
+                  <option value="Hardware">Hardware</option>
+                  <option value="Software">Software</option>
+                  <option value="Network">Network</option>
+                </select>
+              </div>
 
-              <select
-                value={priority}
-                onChange={(e) => setPriority(e.target.value)}
-                required
-              >
-                <option value="">Select Priority</option>
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-              </select>
+              {/* Priority */}
+              <div className="form-group">
+                <label>
+                  <FaFlag /> Priority
+                </label>
+                <select
+                  value={priority}
+                  onChange={(e) => setPriority(e.target.value)}
+                  required
+                >
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+              </div>
 
-              <textarea
-                className="full"
-                placeholder="Describe your issue in detail"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-              ></textarea>
+              {/* Attachment */}
+              <div className="form-group">
+                <label>
+                  <FaPaperclip /> Attachment
+                </label>
+                <input
+                  type="file"
+                  onChange={(e) => setAttachment(e.target.files[0])}
+                />
+              </div>
 
+              {/* Description */}
+              <div className="form-group full">
+                <label>
+                  <FaAlignLeft /> Description
+                </label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  required
+                ></textarea>
+              </div>
+
+              {/* Submit */}
               <button type="submit" className="submit-btn">
-                Update Ticket
+                <FaSave /> Save Changes
               </button>
             </form>
           </div>
+
+          {/* RIGHT – INFO PANEL (reused layout) */}
+          <div className="ticket-info-card">
+            <h3>Editing Tips ✏️</h3>
+
+            <ul>
+              <li>Update the title to reflect the issue clearly</li>
+              <li>Change priority if urgency has changed</li>
+              <li>Add more details if the issue evolved</li>
+              <li>Attach new screenshots if needed</li>
+            </ul>
+
+            <div className="priority-hint">
+              <span>Reminder</span>
+              <p>
+                After saving, support will be notified of updates.
+              </p>
+            </div>
+          </div>
+
         </div>
-      </main>
-    </div>
-  );
+      </div>
+    </main>
+  </div>
+);
+
 };
 
 export default EditTicket;

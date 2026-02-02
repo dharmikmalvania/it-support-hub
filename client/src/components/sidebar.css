@@ -1,90 +1,100 @@
-/* sidebar.css */
-
-.user-layout {
-  display: flex;
-  min-height: 100vh;
-  background: #222831;
+:root {
+  --c1: #B1B2FF;
+  --c2: #AAC4FF;
+  --c3: #D2DAFF;
+  --c4: #EEF1FF;
 }
 
-/* Sidebar */
+/* Sidebar Base */
 .sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
   width: 70px;
-  background: #393e46;
-  color: #eeeeee;
+  background: var(--c4);
+  transition: width 0.35s ease;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  transition: width 0.3s ease;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.08);
   overflow: hidden;
+  z-index: 100;
 }
 
+/* Expand on hover */
 .sidebar:hover {
-  width: 220px;
+  width: 240px;
 }
 
 /* Logo */
 .logo {
-  font-size: 22px;
-  font-weight: bold;
-  margin: 20px 0;
-  color: #00adb5;
-}
-
-/* Nav */
-.sidebar nav {
-  width: 100%;
-  flex: 1;
-}
-
-.sidebar a {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 14px 20px;
-  color: #eeeeee;
-  text-decoration: none;
-  transition: background 0.2s;
+  gap: 12px;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
 }
 
-.sidebar a:hover,
-.sidebar a.active {
-  background: #00adb5;
-  color: #222831;
-}
-
-.sidebar a span {
+.logo-text {
+  opacity: 0;
   white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.3s ease;
 }
 
-.sidebar:hover a span {
+.sidebar:hover .logo-text {
   opacity: 1;
 }
 
-/* Logout */
-.logout-btn {
-  background: #ff4d4d;
-  border: none;
-  color: white;
-  padding: 14px 20px;
-  width: 100%;
+/* Menu */
+.menu {
+  flex: 1;
+  padding-top: 10px;
+}
+
+/* Menu Item */
+.menu-item {
   display: flex;
   align-items: center;
-  gap: 15px;
-  cursor: pointer;
+  gap: 16px;
+  padding: 14px 20px;
+  color: #333;
+  text-decoration: none;
+  font-size: 15px;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-.logout-btn span {
+.menu-item svg {
+  font-size: 20px;
+  min-width: 20px;
+}
+
+/* Hide text initially */
+.menu-item span {
   opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.25s ease;
 }
 
-.sidebar:hover .logout-btn span {
+/* Reveal text on hover */
+.sidebar:hover .menu-item span {
   opacity: 1;
 }
 
-/* Page content */
-.page-content {
-  flex: 1;
-  padding: 30px;
+/* Hover effect */
+.menu-item:hover {
+  background: var(--c3);
+  color: #000;
+}
+
+/* Active link */
+.menu-item.active {
+  background: var(--c2);
+  font-weight: 600;
+}
+
+/* Logout section */
+.logout {
+  padding-bottom: 15px;
 }
