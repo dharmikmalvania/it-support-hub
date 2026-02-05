@@ -3,6 +3,7 @@ import axios from "../../utils/axiosInstance";
 import "../../styles/profile.css";
 
 const Profile = () => {
+    const token = localStorage.getItem("token"); 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
@@ -11,58 +12,118 @@ const Profile = () => {
   const [notification, setNotification] = useState(true);
   const [avatar, setAvatar] = useState("");
 
-const uploadAvatar = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
 
-  const formData = new FormData();
-  formData.append("avatar", file);
 
-  const { data } = await axios.post("/user/avatar", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-
-  setAvatar(data.avatar);
-};
 
 
   useEffect(() => {
     loadProfile();
   }, []);
 
-  const loadProfile = async () => {
-    const { data } = await axios.get("/user/profile");
+ const loadProfile = async () => {
+  try {
+    const { data } = await axios.get("/user/profile", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     setName(data.name || "");
     setEmail(data.email || "");
     setAvatar(data.avatar || "");
     setNotification(Boolean(data.notificationEnabled));
-  };
+  } catch (error) {
+    console.error("LOAD PROFILE ERROR:", error);
+    alert("Failed to load profile");
+  }
+};
 
-  const updateProfile = async () => {
-    await axios.put("/user/profile", { name, avatar });
-    alert("Profile updated");
-  };
 
-  const changePassword = async () => {
-    await axios.put("/user/change-password", {
-      currentPassword,
-      newPassword,
+ const uploadAvatar = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("avatar", file);
+
+  try {
+    const { data } = await axios.post("/user/avatar", formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
     });
+
+    setAvatar(data.avatar);
+  } catch (error) {
+    console.error("UPLOAD AVATAR ERROR:", error);
+    alert("Failed to upload avatar");
+  }
+};
+
+const changePassword = async () => {
+  try {
+    await axios.put(
+      "/user/change-password",
+      {
+        currentPassword,
+        newPassword,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
     alert("Password changed successfully");
     setCurrentPassword("");
     setNewPassword("");
-  };
+  } catch (error) {
+    console.error("CHANGE PASSWORD ERROR:", error);
+    alert(error.response?.data?.message || "Failed to change password");
+  }
+};
 
 const toggleNotify = async () => {
-  const newValue = !notification;
+  try {
+    const newValue = !notification;
 
-  const { data } = await axios.put("/user/notification", {
-    enabled: newValue,
-  });
+    const { data } = await axios.put(
+      "/user/notification",
+      { enabled: newValue },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-  setNotification(data.status);
+    setNotification(data.status);
+  } catch (error) {
+    console.error("NOTIFICATION ERROR:", error);
+    alert("Failed to update notification setting");
+  }
+};
+
+
+const updateProfile = async () => {
+  try {
+    await axios.put(
+      "/user/profile",
+      { name, avatar },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert("Profile updated");
+  } catch (error) {
+    console.error("UPDATE PROFILE ERROR:", error);
+    alert("Failed to update profile");
+  }
 };
 
 return (

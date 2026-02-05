@@ -18,27 +18,32 @@ const History = () => {
     //   return;
     // }
 
-    const fetchTickets = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:5000/api/tickets/my",
-          {
-            headers: {
-              Authorization: `Bearer ${userInfo.token}`,
-            },
-          }
-        );
+   const fetchTickets = async () => {
+  try {
+    const token = localStorage.getItem("token");
 
-        // ✅ ONLY CLOSED TICKETS
-        const closedTickets = res.data.filter(
-          (t) => t.status === "Closed"
-        );
+    if (!token) {
+      alert("Session expired. Please login again.");
+      return;
+    }
 
-        setTickets(closedTickets);
-      } catch (error) {
-        console.error("Failed to load history");
+    const response = await axios.get(
+      "http://localhost:5000/api/tickets/history",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    };
+    );
+
+    setTickets(response.data);
+  } catch (error) {
+    console.error("Failed to load history:", error);
+    alert("Unable to load history. Please try again later.");
+  }
+};
+
+
 
     fetchTickets();
   }, []);

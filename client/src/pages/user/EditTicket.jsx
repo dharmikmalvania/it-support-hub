@@ -38,62 +38,78 @@ const EditTicket = () => {
   }, []);
 
   const fetchTicket = async () => {
+  try {
+    const token = localStorage.getItem("token");
 
-     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
-    // ✅ SAFETY CHECK
-    if (!userInfo || !userInfo.token) {
-      console.warn("No user token found");
+    if (!token) {
+      alert("Session expired. Please login again.");
+      navigate("/login");
       return;
     }
-    try {
-      const res = await axios.get(
-        `http://localhost:5000/api/tickets/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userInfo?.token}`,
-          },
-        }
-      );
 
-      setTitle(res.data.title);
-      setCategory(res.data.category);
-      setPriority(res.data.priority);
-      setDescription(res.data.description);
-    } catch (error) {
-      console.error(error);
-      alert("Failed to load ticket");
-      navigate("/user/my-tickets");
-    }
-  };
+    const res = await axios.get(
+      `http://localhost:5000/api/tickets/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setTitle(res.data.title);
+    setCategory(res.data.category);
+    setPriority(res.data.priority);
+    setDescription(res.data.description);
+
+  } catch (error) {
+    console.error("FETCH TICKET ERROR:", error);
+    alert("Failed to load ticket details.");
+    navigate("/user/my-tickets");
+  }
+};
+
 
   // ✅ UPDATE TICKET
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      await axios.put(
-        `http://localhost:5000/api/tickets/${id}`,
-        {
-          title,
-          category,
-          priority,
-          description,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userInfo?.token}`,
-          },
-        }
-      );
+  try {
+    const token = localStorage.getItem("token");
 
-      alert("Ticket updated successfully");
-      navigate("/user/my-tickets");
-    } catch (error) {
-      console.error(error);
-      alert("Failed to update ticket");
+    if (!token) {
+      alert("Session expired. Please login again.");
+      navigate("/login");
+      return;
     }
-  };
+
+    await axios.put(
+      `http://localhost:5000/api/tickets/${id}`,
+      {
+        title,
+        category,
+        priority,
+        description,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // ✅ FIX
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    alert("Ticket updated successfully");
+    navigate("/user/my-tickets");
+
+  } catch (error) {
+    console.error("UPDATE TICKET ERROR:", error.response?.data || error);
+    alert(
+      error.response?.data?.message ||
+      "Failed to update ticket"
+    );
+  }
+};
+
 
 
 

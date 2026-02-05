@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   FaHeading,
@@ -14,6 +15,7 @@ import {
 import "../../styles/raiseTicket.css";
 
 const RaiseTicket = () => {
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [priority, setPriority] = useState("");
@@ -22,44 +24,46 @@ const RaiseTicket = () => {
 
 
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
-     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
-    // ✅ SAFETY CHECK
-    if (!userInfo || !userInfo.token) {
-      console.warn("No user token found");
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Session expired. Please login again.");
       return;
     }
-    try {
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("category", category);
-      formData.append("priority", priority);
-      formData.append("description", description);
-      if (attachment) formData.append("attachment", attachment);
 
-      await axios.post(
-        "http://localhost:5000/api/tickets",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${userInfo?.token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+    const formDataToSend = new FormData();
+    formDataToSend.append("title", title);
+    formDataToSend.append("category", category);
+    formDataToSend.append("priority", priority);
+    formDataToSend.append("description", description);
 
-      alert("Ticket submitted successfully");
-      setTitle("");
-      setCategory("");
-      setPriority("");
-      setDescription("");
-      setAttachment(null);
-    } catch (error) {
-      console.error(error);
-      alert("Failed to submit ticket");
+    if (attachment) {
+      formDataToSend.append("attachment", attachment);
     }
-  };
+
+    await axios.post(
+      "http://localhost:5000/api/tickets",
+      formDataToSend,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert("Ticket created successfully");
+    navigate("/user/my-tickets");
+
+  } catch (error) {
+    console.error("CREATE TICKET ERROR:", error);
+    alert("Failed to create ticket. Please try again.");
+  }
+};
+
 
 
 

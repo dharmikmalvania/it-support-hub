@@ -10,25 +10,37 @@ const TicketDetails = () => {
 
   const [ticket, setTicket] = useState(null);
 
-  useEffect(() => {
-    const fetchTicket = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:5000/api/tickets/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${userInfo.token}`,
-            },
-          }
-        );
-        setTicket(res.data);
-      } catch (error) {
-        console.error("Failed to load ticket");
-      }
-    };
+ useEffect(() => {
+  const fetchTicket = async () => {
+    try {
+      const token = localStorage.getItem("token");
 
-    fetchTicket();
-  }, [id]);
+      if (!token) {
+        alert("Session expired. Please login again.");
+        navigate("/login");
+        return;
+      }
+
+      const res = await axios.get(
+        `http://localhost:5000/api/tickets/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ FIX
+          },
+        }
+      );
+
+      setTicket(res.data);
+    } catch (error) {
+      console.error("Failed to load ticket", error.response?.data || error);
+      alert("Failed to load ticket");
+      navigate("/user/my-tickets");
+    }
+  };
+
+  fetchTicket();
+}, [id, navigate]);
+
 
   if (!ticket) return <p>Loading ticket...</p>;
 

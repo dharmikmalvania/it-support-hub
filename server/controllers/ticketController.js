@@ -2,10 +2,12 @@ import Ticket from "../models/Ticket.js";
 import Notification from "../models/Notification.js";
 import User from "../models/User.js";
 import sendEmail from "../utils/sendEmail.js";
-import {ticketClosedEmailTemplate,} from "../utils/emailTemplates.js";
+import {
+  ticketCreatedTemplate,
+  ticketClosedEmailTemplate
+} from "../utils/ticketCreatedTemplate.js";
+
 import createNotification from "../utils/createNotification.js";
-
-
 
 // DASHBOARD STATS
 export const getTicketStats = async (req, res) => {
@@ -17,7 +19,6 @@ export const getTicketStats = async (req, res) => {
 
   res.json({ total, open, closed });
 };
-
 
 /* =========================
    CREATE TICKET
@@ -40,19 +41,20 @@ export const createTicket = async (req, res) => {
 
     // 🔹 send email
     await sendEmail(
-      user.email,
-      "🎫 Ticket Created - IT Support Hub",
-      `
-        <h2>Your ticket has been created</h2>
-        <p><strong>Title:</strong> ${title}</p>
-        <p><strong>Category:</strong> ${category}</p>
-        <p><strong>Priority:</strong> ${priority}</p>
-        <p><strong>Description:</strong> ${description}</p>
-        <p><strong>Status:</strong> Open</p>
-        <br />
-        <p>Our support team will contact you soon.</p>
-      `
-    );
+  user.email,
+  "Ticket Created - IT Support Hub",
+  ticketCreatedTemplate({
+    name: user.name,
+    title: ticket.title,
+    category: ticket.category,
+    priority: ticket.priority,
+    description: ticket.description,
+    status: ticket.status,
+    ticketId: ticket._id.toString().slice(-6),
+  })
+);
+
+
     
 
       await createNotification(
@@ -67,9 +69,6 @@ export const createTicket = async (req, res) => {
     res.status(500).json({ message: "Failed to create ticket" });
   }
 };
-
-
-
 
 /* =========================
    GET USER TICKETS
@@ -166,7 +165,6 @@ export const closeTicket = async (req, res) => {
   }
 };
 
-
 /* =========================
    SUBMIT FEEDBACK
 ========================= */
@@ -208,8 +206,6 @@ export const submitFeedback = async (req, res) => {
   res.json({ message: "Feedback submitted successfully" });
 };
 
-
-
 export const closeTicketWithFeedback = async (req, res) => {
   try {
     console.log("FEEDBACK HIT");
@@ -235,6 +231,20 @@ export const closeTicketWithFeedback = async (req, res) => {
 };
 
 
+/* =========================
+   GET TICKET HISTORY
+   (Closed tickets only)
+========================= */
+export const getTicketHistory = async (req, res) => {
+  try {
+    const tickets = await Ticket.find({
+      user: req.user.id,
+      status: "Closed",
+    }).sort({ updatedAt: -1 });
 
-
-
+    res.json(tickets);
+  } catch (error) {
+    console.error("GET TICKET HISTORY ERROR:", error);
+    res.status(500).json({ message: "Failed to fetch ticket history" });
+  }
+};

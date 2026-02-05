@@ -27,27 +27,59 @@ const Dashboard = () => {
   useEffect(() => {
     const loadDashboard = async () => {
       try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          alert("Session expired. Please login again.");
+          navigate("/login");
+          return;
+        }
+
         // SUMMARY
-        const summaryRes = await fetch("/api/dashboard/summary");
+        const summaryRes = await fetch(
+          "/api/dashboard/summary",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const summaryData = await summaryRes.json();
         setStats(summaryData);
 
         // RECENT TICKETS
-        const recentRes = await fetch("/api/dashboard/recent-tickets");
+        const recentRes = await fetch(
+          "/api/dashboard/recent-tickets",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const recentData = await recentRes.json();
         setRecentTickets(recentData);
 
         // CHART DATA
-        const chartRes = await fetch("/api/dashboard/charts");
+        const chartRes = await fetch(
+          "/api/dashboard/charts",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const chartJson = await chartRes.json();
         setChartData(chartJson);
+
       } catch (err) {
         console.error("Dashboard load failed", err);
+        alert("Failed to load dashboard data");
       }
     };
 
     loadDashboard();
-  }, []);
+  }, [navigate]);
+
 
   return (
   <main className="dashboard">

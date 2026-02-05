@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate , Link } from "react-router-dom";
 import "./auth.css";
 
 const Login = () => {
@@ -73,6 +73,10 @@ const Login = () => {
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
+<div className="auth-footer">
+  Don’t have an account? <Link to="/register">Register</Link>
+</div>
+
       </div>
     </div>
   );

@@ -17,31 +17,30 @@ const MyTickets = () => {
 
   // 🔹 Fetch user tickets
   useEffect(() => {
-    const fetchTickets = async () => {
+  const fetchTickets = async () => {
+  try {
+    const token = localStorage.getItem("token");
 
-       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
-    // ✅ SAFETY CHECK
-    if (!userInfo || !userInfo.token) {
-      console.warn("No user token found");
+    if (!token) {
+      alert("Session expired. Please login again.");
       return;
     }
-      try {
-        const res = await axios.get(
-          "http://localhost:5000/api/tickets/my",
-          {
-            headers: {
-              Authorization: `Bearer ${userInfo.token}`,
-            },
-          }
-        );
 
-        setTickets(res.data);
-      } catch (error) {
-        console.error(error);
-        alert("Failed to load tickets");
+    const response = await axios.get(
+      "http://localhost:5000/api/tickets/my",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    };
+    );
+
+    setTickets(response.data);
+  } catch (error) {
+    console.error("Failed to fetch tickets:", error);
+    alert("Unable to load tickets. Please try again later.");
+  }
+};
 
     fetchTickets();
   }, []);

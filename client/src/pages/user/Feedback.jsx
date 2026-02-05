@@ -21,35 +21,38 @@ const Feedback = () => {
   const [message, setMessage] = useState("");
 
   const submitFeedback = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!userInfo || !userInfo.token) {
-      setMessage("Session expired. Please login again.");
-      return;
-    }
+  const token = localStorage.getItem("token");
 
-    try {
-      await axios.post(
-        `http://localhost:5000/api/tickets/${id}/close-feedback`,
-        { rating, comment },
-        {
-          headers: {
-            Authorization: `Bearer ${userInfo.token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  if (!token) {
+    setMessage("Session expired. Please login again.");
+    return;
+  }
 
-      alert("Thank you for your feedback ❤️");
-      navigate("/user/history");
+  try {
+    await axios.post(
+      `http://localhost:5000/api/tickets/${id}/close-feedback`,
+      { rating, comment },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // ✅ FIX
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-    } catch (error) {
-      console.error("FEEDBACK ERROR:", error);
-      setMessage(
-        error.response?.data?.message || "Failed to submit feedback"
-      );
-    }
-  };
+    alert("Thank you for your feedback ❤️");
+    navigate("/user/history");
+
+  } catch (error) {
+    console.error("FEEDBACK ERROR:", error);
+    setMessage(
+      error.response?.data?.message || "Failed to submit feedback"
+    );
+  }
+};
+
 
 
 
