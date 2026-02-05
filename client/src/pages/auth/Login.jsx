@@ -1,59 +1,62 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../../styles/auth.css";
+import { useNavigate } from "react-router-dom";
+import "./auth.css";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // 🔥 STOP PAGE REFRESH
+    setError("");
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const { data } = await axios.post(
-      "http://localhost:5000/api/auth/login",
-      { email, password }
-    );
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        { email, password }
+      );
 
-    // ✅ SAVE USER
-    localStorage.setItem("userInfo", JSON.stringify(data));
+      console.log("LOGIN RESPONSE:", res.data);
 
-    // ✅ FORCE REDIRECT (SAFE)
-    window.location.href = "/user/Dashboard";
+      // ✅ SAVE TOKEN
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
-  } catch (err) {
-    setError(err.response?.data?.message || "Invalid email or password");
-  } finally {
-    setLoading(false);
-  }
-};
+      console.log("TOKEN SAVED:", localStorage.getItem("token"));
 
+      // ✅ FORCE REDIRECT (React 18 safe)
+      setTimeout(() => {
+        navigate("/user/Dashboard", { replace: true });
+      }, 0);
+
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="auth-container">
+    <div className="auth-wrapper">
       <div className="auth-card">
-        <h2>Welcome Back</h2>
+        <h2>Login</h2>
 
-        {error && <div className="error-msg">{error}</div>}
+        {error && <div className="auth-error">{error}</div>}
 
-        <form onSubmit={onSubmit} className="auth-form">
+        <form className="auth-form" onSubmit={handleSubmit}>
           <input
             type="email"
-            placeholder="Email Address"
+            placeholder="Email"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setError("");
-            }}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="username"
             required
           />
 
@@ -61,21 +64,15 @@ const Login = () => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setError("");
-            }}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
             required
           />
 
-          <button type="submit" disabled={loading}>
+          <button type="submit" className="auth-btn" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-
-        <p className="auth-footer">
-          Don’t have an account? <a href="/register">Register</a>
-        </p>
       </div>
     </div>
   );

@@ -1,83 +1,270 @@
-.profile-container {
-  max-width: 700px;
+/* =========================
+   PAGE BASE
+========================= */
+.profile-page {
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 32px;
 }
 
-.profile-container h1 {
-  color: #eeeeee;
-  margin-bottom: 20px;
+/* =========================
+   HEADER
+========================= */
+.profile-header {
+  margin-bottom: 32px;
 }
 
-.profile-tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+.profile-header h1 {
+  font-size: 34px;
+  font-weight: 700;
+  color: #2d2f55;
 }
 
-.profile-tabs button {
-  background: #393e46;
-  color: #eeeeee;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
+.profile-header p {
+  margin-top: 6px;
+  color: #6b6f8d;
+  font-size: 15px;
+}
+
+/* =========================
+   MAIN GRID (FIXED & STABLE)
+========================= */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "avatar summary"
+    "avatar security"
+    "basic  email";
+  gap: 28px;
+  align-items: start;
+}
+
+/* =========================
+   GRID AREA MAPPING
+========================= */
+.profile-avatar-card {
+  grid-area: avatar;
+}
+
+.profile-summary-card {
+  grid-area: summary;
+  margin-bottom: 32px;
+}
+
+.profile-card.security {
+  grid-area: security;
+}
+
+.profile-card.basic-info {
+  grid-area: basic;
+  margin-bottom: 32px;
+}
+
+.profile-card.toggle-card {
+  grid-area: email;
+   margin-top: 16px;
+}
+
+/* =========================
+   CARD BASE
+========================= */
+.profile-avatar-card,
+.profile-summary-card,
+.profile-card {
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 26px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================
+   AVATAR
+========================= */
+.profile-avatar-card {
+  text-align: center;
+}
+
+.avatar-wrapper {
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  padding: 4px;
+  background: linear-gradient(135deg, #b1b2ff, #aac4ff);
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+}
+
+.avatar-upload input {
+  display: none;
+}
+
+.avatar-upload label {
+  display: inline-block;
+  padding: 10px 22px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #b1b2ff, #aac4ff);
+  color: #fff;
+  font-weight: 600;
   cursor: pointer;
 }
 
-.profile-tabs button.active {
-  background: #00adb5;
-  color: #222831;
+.avatar-hint {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #7b7f9a;
 }
 
-.profile-card {
-  background: #393e46;
-  padding: 25px;
-  border-radius: 12px;
+/* =========================
+   ACCOUNT SUMMARY
+========================= */
+.profile-summary-card h4 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eef1ff;
+  font-size: 14px;
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+/* =========================
+   BASIC INFO + SECURITY
+========================= */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  
+}
+
+.card-header h3 {
+  font-size: 18px;
+}
+
+.card-sub {
+  font-size: 13px;
+  color: #7b7f9a;
 }
 
 .profile-card label {
   display: block;
-  margin-top: 15px;
-  color: #eeeeee;
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #555;
 }
 
 .profile-card input {
   width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  margin-top: 5px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid #d2daff;
+  margin-bottom: 16px;
+  font-size: 14px;
 }
 
-.profile-card input:disabled {
-  background: #2b2f36;
-  color: #aaa;
+.card-actions {
+  text-align: right;
 }
 
-.checkbox {
+/* =========================
+   SECURITY (VISUAL WEIGHT)
+========================= */
+.profile-card.security {
+  border: 1px solid #eef1ff;
+}
+
+/* =========================
+   EMAIL NOTIFICATIONS
+========================= */
+.profile-card.toggle-card {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  margin-top: 20px;
+  min-height: 160px;
 }
 
-.save-btn {
-  margin-top: 25px;
-  background: #00adb5;
-  color: #222831;
-  padding: 12px;
-  width: 100%;
+/* =========================
+   BUTTON
+========================= */
+.primary-btn {
+  padding: 12px 26px;
+  border-radius: 18px;
   border: none;
-  border-radius: 10px;
-  font-weight: bold;
+  background: linear-gradient(135deg, #b1b2ff, #aac4ff);
+  color: #fff;
+  font-weight: 600;
   cursor: pointer;
 }
 
-.profile-message {
-  margin-top: 15px;
-  color: #00adb5;
+/* =========================
+   TOGGLE SWITCH
+========================= */
+.switch {
+  position: relative;
+  width: 52px;
+  height: 28px;
 }
 
-.security-note {
-  color: #eeeeee;
-  opacity: 0.8;
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 30px;
+  transition: 0.3s;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  left: 4px;
+  top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.switch input:checked + .slider {
+  background: #b1b2ff;
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(22px);
+}
+
+/* =========================
+   RESPONSIVE (CANNOT BREAK)
+========================= */
+@media (max-width: 1000px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "avatar"
+      "summary"
+      "security"
+      "basic"
+      "email";
+  }
 }

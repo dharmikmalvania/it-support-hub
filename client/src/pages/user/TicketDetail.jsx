@@ -1,24 +1,16 @@
-import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import "../../styles/ticketDetail.css";
 
-const TicketDetail = () => {
+const TicketDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   const [ticket, setTicket] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!userInfo?.token) {
-      navigate("/login");
-      return;
-    }
-
     const fetchTicket = async () => {
       try {
         const res = await axios.get(
@@ -29,72 +21,98 @@ const TicketDetail = () => {
             },
           }
         );
-
         setTicket(res.data);
-      } catch (err) {
-        setError("Unable to load ticket details");
-      } finally {
-        setLoading(false);
+      } catch (error) {
+        console.error("Failed to load ticket");
       }
     };
 
     fetchTicket();
   }, [id]);
 
-  // ✅ ALWAYS RENDER SOMETHING
-  return (
-    <div className="user-layout">
-     
+  if (!ticket) return <p>Loading ticket...</p>;
 
-      <div className="main-content">
-        {loading && <p>Loading ticket...</p>}
 
-        {error && <p className="error-text">{error}</p>}
+return (
+  <div className="user-layout">
+    <main className="main-content">
+      <div className="ticket-detail-page">
 
-        {!loading && ticket && (
+        {/* HEADER */}
+        <div className="ticket-detail-header">
+          <div>
+            <h1>Ticket Details</h1>
+            <p>Detailed view of your support request</p>
+          </div>
+
+          <button className="back-btn" onClick={() => navigate(-1)}>
+            ← Back
+          </button>
+        </div>
+
+        {/* MAIN GRID */}
+        <div className="ticket-detail-grid">
+
+          {/* LEFT – DETAILS */}
           <div className="ticket-detail-card">
-            <h1>{ticket.title}</h1>
+            <div className="meta-grid">
+              <div className="meta-item">
+                <span>Title</span>
+                <p>{ticket.title}</p>
+              </div>
 
-            <div className="detail-row">
-              <span>Category:</span>
-              <strong>{ticket.category}</strong>
+              <div className="meta-item">
+                <span>Category</span>
+                <p>{ticket.category}</p>
+              </div>
+
+              <div className="meta-item">
+                <span>Priority</span>
+                <p className={`priority ${ticket.priority.toLowerCase()}`}>
+                  {ticket.priority}
+                </p>
+              </div>
+
+              <div className="meta-item">
+                <span>Status</span>
+                <p className={`status ${ticket.status.toLowerCase()}`}>
+                  {ticket.status}
+                </p>
+              </div>
             </div>
 
-            <div className="detail-row">
-              <span>Priority:</span>
-              <strong>{ticket.priority}</strong>
-            </div>
-
-            <div className="detail-row">
-              <span>Status:</span>
-              <strong>{ticket.status}</strong>
-            </div>
-
-            <div className="detail-desc">
+            <div className="detail-section">
               <h3>Description</h3>
               <p>{ticket.description}</p>
             </div>
-
-            {/* ✅ FEEDBACK READ-ONLY */}
-            {ticket.feedback && (
-              <div className="feedback-box">
-                <h3>User Feedback</h3>
-                <p>⭐ Rating: {ticket.feedback.rating}</p>
-                <p>{ticket.feedback.comment}</p>
-              </div>
-            )}
-
-            <button
-              className="back-btn"
-              onClick={() => navigate("/user/history")}
-            >
-              ← Back to History
-            </button>
           </div>
-        )}
+
+          {/* RIGHT – FEEDBACK */}
+          <div className="ticket-feedback-card">
+            <h3>Feedback</h3>
+
+            {ticket.feedback ? (
+              <>
+                <div className="rating-box">
+                  ⭐ {ticket.feedback.rating} / 5
+                </div>
+                <p className="feedback-text">
+                  {ticket.feedback.comment}
+                </p>
+              </>
+            ) : (
+              <p className="no-feedback">
+                Feedback not submitted for this ticket
+              </p>
+            )}
+          </div>
+
+        </div>
       </div>
-    </div>
-  );
+    </main>
+  </div>
+);
+
 };
 
-export default TicketDetail;
+export default TicketDetails;

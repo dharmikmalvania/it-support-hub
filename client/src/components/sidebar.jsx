@@ -1,55 +1,77 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   FaHome,
   FaTicketAlt,
   FaUser,
-  FaCog,
+  FaHistory,
   FaSignOutAlt,
 } from "react-icons/fa";
 import "./Sidebar.css";
 
 const Sidebar = () => {
+  const navigate = useNavigate(); // ✅ hook inside component
+
+  const handleLogout = () => {
+    localStorage.removeItem("userInfo"); // clear session
+    navigate("/login"); // redirect
+  };
+
+  // 🔹 Get user from storage / context
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // 🔹 Build avatar URL safely
+  const avatarUrl = user?.avatar
+    ? `http://localhost:5000${user.avatar}`
+    : "/avatar.png"; // fallback
+
   return (
     <aside className="sidebar">
-      <div className="logo">
-        <span className="logo-icon">💻</span>
-        <span className="logo-text">IT Support</span>
+      {/* LOGO */}
+      <div className="sidebar-logo">
+        <span>IT</span>
       </div>
 
-      <nav className="menu">
-        <NavLink to="/dashboard" className="menu-item">
+      {/* MENU */}
+      <nav className="sidebar-menu">
+        <NavLink to="/user/dashboard" className="side-item" data-label="Dashboard">
           <FaHome />
-          <span>Dashboard</span>
         </NavLink>
 
-        <NavLink to="/user/raise-ticket" className="menu-item">
+        <NavLink to="/user/raise-ticket" className="side-item" data-label="Raise Ticket">
           <FaTicketAlt />
-          <span>Raise Ticket</span>
         </NavLink>
 
-        <NavLink to="/user/my-tickets" className="menu-item">
+        <NavLink to="/user/my-tickets" className="side-item" data-label="My Tickets">
           <FaUser />
-          <span>My Tickets</span>
         </NavLink>
 
-       <NavLink to="/user/history" className="menu-item">
-          <FaCog />
-          <span>History</span>
+        <NavLink to="/user/history" className="side-item" data-label="History">
+          <FaHistory />
         </NavLink>
 
-          <NavLink to="/user/profile" className="menu-item">
-          <FaCog />
-          <span>Profile</span>
+        <NavLink to="/user/profile" className="side-item" data-label="Profile">
+          <FaUser />
         </NavLink>
-
       </nav>
 
+      {/* BOTTOM */}
+      <div className="sidebar-bottom">
+        <img
+          src={avatarUrl}
+          alt="Profile"
+          className="profile-pic"
+          onError={(e) => {
+            e.target.src = "/avatar.png";
+          }}
+        />
 
-
-      <div className="logout">
-        <NavLink to="/logout" className="menu-item">
+        <NavLink
+          to="/login"
+          className="side-item logout"
+          data-label="Logout"
+          onClick={handleLogout}
+        >
           <FaSignOutAlt />
-          <span>Logout</span>
         </NavLink>
       </div>
     </aside>

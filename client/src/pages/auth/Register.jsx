@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../../styles/auth.css";
+import { useNavigate, Link } from "react-router-dom";
+import "./auth.css";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -10,117 +10,88 @@ const Register = () => {
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
-    terms: false,
   });
 
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const { name, email, password, confirmPassword, terms } = formData;
-
-  const onChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
-    setError("");
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const onSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // ✅ VALIDATIONS
-    if (password !== confirmPassword) {
-      return setError("Passwords do not match");
-    }
-
-    if (!terms) {
-      return setError("You must accept Terms & Conditions");
-    }
+    setError("");
 
     try {
-    const res = await axios.post(
-  "http://localhost:5000/api/auth/register",
-  { name, email, password }
-);
+      setLoading(true);
 
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        formData
+      );
 
-      // ✅ GO TO OTP PAGE
       navigate("/verify-otp", {
         state: { userId: res.data.userId },
       });
-
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <form className="auth-card" onSubmit={onSubmit}>
-        <h2>Create Account</h2>
+    <div className="auth-wrapper">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h2>Create Account 🚀</h2>
+          <p>Start managing support tickets easily</p>
+        </div>
 
-        {error && <p className="error-text">{error}</p>}
+        {error && <div className="auth-error">{error}</div>}
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Full Name"
-          value={name}
-          onChange={onChange}
-          required
-        />
-
-        <input
-          type="email"
-          name="email"
-          placeholder="Email Address"
-          value={email}
-          onChange={onChange}
-          required
-        />
-
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={password}
-          onChange={onChange}
-          required
-        />
-
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={onChange}
-          required
-        />
-
-        <label className="terms">
+        <form className="auth-form" onSubmit={handleSubmit}>
           <input
-            type="checkbox"
-            name="terms"
-            checked={terms}
-            onChange={onChange}
+            type="text"
+            name="name"
+            placeholder="Full name"
+            value={formData.name}
+            onChange={handleChange}
+            required
           />
-          I agree to the Terms & Conditions
-        </label>
 
-        <button type="submit" className="auth-btn">
-          Register
-        </button>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email address"
+            value={formData.email}
+            onChange={handleChange}
+            autoComplete="username"
+            required
+          />
 
-        <p className="auth-footer">
-          Already have an account?{" "}
-          <span onClick={() => navigate("/login")}>Login</span>
-        </p>
-      </form>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            autoComplete="new-password"
+            required
+          />
+
+          <button className="auth-btn" type="submit" disabled={loading}>
+            {loading ? "Sending OTP..." : "Register"}
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          Already have an account? <Link to="/login">Login</Link>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default Register;
-

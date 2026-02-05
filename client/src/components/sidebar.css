@@ -1,100 +1,133 @@
 :root {
-  --c1: #B1B2FF;
-  --c2: #AAC4FF;
-  --c3: #D2DAFF;
-  --c4: #EEF1FF;
+  --sb-bg: linear-gradient(180deg, #eef1ff, #e6ebff);
+  --sb-active: #b1b2ff;
+  --sb-hover: rgba(177, 178, 255, 0.15);
+  --sb-text: #2d2f55;
 }
 
-/* Sidebar Base */
+/* SIDEBAR */
 .sidebar {
-  position: fixed;
+  width: 74px;
+  height: 100vh;
+
+  position: fixed;      /* 🔥 KEY FIX */
   top: 0;
   left: 0;
-  height: 100vh;
-  width: 70px;
-  background: var(--c4);
-  transition: width 0.35s ease;
+
+  background: linear-gradient(180deg, #eef1ff, #e6ebff);
   display: flex;
   flex-direction: column;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  z-index: 100;
-}
+  align-items: center;
+  padding: 16px 0;
 
-/* Expand on hover */
-.sidebar:hover {
-  width: 240px;
+  box-shadow: 6px 0 25px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
 }
-
-/* Logo */
-.logo {
+/* LOGO */
+.sidebar-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--sb-active);
+  color: #fff;
+  font-weight: 800;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 20px;
+  justify-content: center;
+  margin-bottom: 28px;
   font-size: 18px;
-  font-weight: 600;
-  color: #333;
 }
 
-.logo-text {
-  opacity: 0;
-  white-space: nowrap;
-  transition: opacity 0.3s ease;
-}
-
-.sidebar:hover .logo-text {
-  opacity: 1;
-}
-
-/* Menu */
-.menu {
+/* MENU */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   flex: 1;
-  padding-top: 10px;
 }
 
-/* Menu Item */
-.menu-item {
+/* ITEM */
+.side-item {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 14px 20px;
-  color: #333;
-  text-decoration: none;
-  font-size: 15px;
-  transition: background 0.3s ease, color 0.3s ease;
+  justify-content: center;
+  color: var(--sb-text);
+  font-size: 18px;
+  position: relative;
+  transition: all 0.25s ease;
 }
 
-.menu-item svg {
-  font-size: 20px;
-  min-width: 20px;
+/* HOVER */
+.side-item:hover {
+  background: var(--sb-hover);
+  transform: translateX(4px);
 }
 
-/* Hide text initially */
-.menu-item span {
-  opacity: 0;
+/* ACTIVE */
+.side-item.active {
+  background: var(--sb-active);
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(177, 178, 255, 0.6);
+}
+
+/* ACTIVE INDICATOR */
+.side-item.active::before {
+  content: "";
+  position: absolute;
+  left: -18px;
+  width: 6px;
+  height: 28px;
+  background: var(--sb-active);
+  border-radius: 6px;
+}
+
+/* TOOLTIP */
+.side-item::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 64px;
+  background: #2d2f55;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
   white-space: nowrap;
-  transition: opacity 0.25s ease;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: all 0.25s ease;
+  pointer-events: none;
 }
 
-/* Reveal text on hover */
-.sidebar:hover .menu-item span {
+.side-item:hover::after {
   opacity: 1;
+  transform: translateX(0);
 }
 
-/* Hover effect */
-.menu-item:hover {
-  background: var(--c3);
-  color: #000;
+/* BOTTOM */
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
 }
 
-/* Active link */
-.menu-item.active {
-  background: var(--c2);
-  font-weight: 600;
+/* PROFILE PIC */
+.profile-pic {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--sb-active);
 }
 
-/* Logout section */
+/* LOGOUT */
 .logout {
-  padding-bottom: 15px;
+  color: #e74c3c;
+}
+
+.logout:hover {
+  background: rgba(231, 76, 60, 0.15);
 }

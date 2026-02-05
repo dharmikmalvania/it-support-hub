@@ -13,10 +13,10 @@ const History = () => {
   const [priority, setPriority] = useState("");
 
   useEffect(() => {
-    if (!userInfo?.token) {
-      navigate("/login");
-      return;
-    }
+    // if (!userInfo?.token) {
+    //   navigate("/login");
+    //   return;
+    // }
 
     const fetchTickets = async () => {
       try {

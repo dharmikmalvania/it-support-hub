@@ -1,175 +1,227 @@
-:root {
-  --c1: #b1b2ff;
-  --c2: #aac4ff;
-  --c3: #d2daff;
-  --c4: #eef1ff;
+/* =========================
+   DASHBOARD BASE
+========================= */
+.dashboard {
+  padding: 32px;
+  max-width: 1200px;
+  margin: auto;
 }
 
-/* Page */
-.page-content {
-  flex: 1;                 /* ✅ TAKE FULL WIDTH */
-  padding: 40px;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #EEF1FF, #D2DAFF);
-  overflow-x: hidden;
-}
-
-
-/* Header */
+/* =========================
+   HEADER / HERO
+========================= */
 .dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #eef1ff, #f6f7ff);
+  padding: 28px;
+  border-radius: 26px;
   margin-bottom: 28px;
 }
 
-.dashboard-header h1 {
-  font-size: 32px;
-  font-weight: 700;
+.dashboard-header h2 {
+  font-size: 28px;
   color: #2d2f55;
 }
 
 .dashboard-header p {
   margin-top: 6px;
-  color: #666;
+  color: #555;
 }
 
-/* Quick actions */
-.quick-actions {
+.hero-actions {
   display: flex;
   gap: 14px;
-  margin-bottom: 30px;
-  flex-wrap: wrap;
 }
 
 .action-btn {
-  padding: 12px 18px;
-  border-radius: 16px;
+  padding: 12px 22px;
+  border-radius: 18px;
   border: none;
-  background: #fff;
+  background: #ffffff;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  transition: all 0.25s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .action-btn.primary {
-  background: linear-gradient(135deg, var(--c1), var(--c2));
+  background: linear-gradient(135deg, #b1b2ff, #aac4ff);
   color: #fff;
 }
 
-.action-btn:hover {
-  transform: translateY(-2px);
-}
-
-/* Stats */
+/* =========================
+   STATS GRID
+========================= */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  margin-bottom: 34px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  margin-bottom: 32px;
 }
 
 .stat-card {
-  background: #fff;
-  padding: 22px;
-  border-radius: 20px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 24px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.stat-card.highlight {
-  background: linear-gradient(135deg, var(--c1), var(--c2));
-  color: #fff;
+.stat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.18);
+}
+
+.stat-card p {
+  font-size: 13px;
+  color: #777;
 }
 
 .stat-card h3 {
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.stat-value {
-  font-size: 28px;
-  font-weight: 700;
-}
-
-/* Grid */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
-  margin-bottom: 28px;
-}
-
-/* Cards */
-.dashboard-card {
-  background: #fff;
-  padding: 26px;
-  border-radius: 22px;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard-card.soft {
-  background: linear-gradient(135deg, var(--c4), #fff);
-}
-
-.dashboard-card h2 {
-  margin-bottom: 14px;
+  margin-top: 8px;
+  font-size: 30px;
   color: #2d2f55;
 }
 
-/* Lists */
-.ticket-list,
-.notification-list {
-  list-style: none;
-  padding: 0;
+.stat-card.highlight {
+  background: linear-gradient(135deg, #b1b2ff, #aac4ff);
 }
 
-.ticket-list li,
-.notification-list li {
+.stat-card.highlight p,
+.stat-card.highlight h3 {
+  color: #fff;
+}
+
+/* =========================
+   MAIN GRID
+========================= */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+
+/* =========================
+   CARD
+========================= */
+.card {
+  background: #ffffff;
+  padding: 26px;
+  border-radius: 26px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+}
+
+/* CARD HEADER */
+.card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--c3);
+  margin-bottom: 18px;
 }
 
-.ticket-title {
+.card-header h3 {
+  font-size: 18px;
+  color: #2d2f55;
+}
+
+.card-header span {
+  font-size: 13px;
+  color: #777;
+}
+
+.link-btn {
+  border: none;
+  background: none;
   font-weight: 600;
+  color: #4b56d2;
+  cursor: pointer;
 }
 
-/* Status */
-.status {
-  padding: 5px 12px;
-  border-radius: 20px;
+/* =========================
+   TICKET LIST
+========================= */
+.ticket-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ticket-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #eef1ff;
+}
+
+.ticket-list li:last-child {
+  border-bottom: none;
+}
+
+.ticket-list small {
+  font-size: 12px;
+  color: #999;
+}
+
+/* STATUS BADGE */
+.badge {
+  padding: 6px 14px;
+  border-radius: 14px;
   font-size: 12px;
   font-weight: 600;
 }
 
-.status.open {
-  background: #e3fdfd;
-  color: #008080;
+.badge.open {
+  background: #eafffa;
+  color: #0aa;
 }
 
-.status.closed {
+.badge.closed {
   background: #eef1ff;
   color: #4b56d2;
 }
 
-/* Link */
-.link-btn {
-  margin-top: 12px;
-  background: none;
-  border: none;
+/* =========================
+   CHART ENHANCEMENT
+========================= */
+.card canvas,
+.card svg {
+  margin-top: 10px;
+}
+
+/* Optional chart glow effect */
+.card .recharts-wrapper {
+  filter: drop-shadow(0 12px 30px rgba(177, 178, 255, 0.35));
+}
+
+/* =========================
+   TIP
+========================= */
+.dashboard-tip {
+  padding: 14px 20px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #eef1ff, #f6f7ff);
   color: #4b56d2;
-  font-weight: 600;
-  cursor: pointer;
+  font-weight: 500;
 }
 
-/* Warning */
-.warn {
-  color: #b00020;
-}
-
-/* Responsive */
+/* =========================
+   RESPONSIVE
+========================= */
 @media (max-width: 900px) {
-  .page-content {
-    padding: 24px;
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
   }
 }

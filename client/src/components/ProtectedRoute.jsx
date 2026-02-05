@@ -1,13 +1,15 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-const ProtectedRoute = ({ children }) => {
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+const ProtectedRoute = () => {
+  const token = localStorage.getItem("token");
 
-  if (!userInfo || !userInfo.token) {
+  console.log("PROTECTED ROUTE TOKEN:", token); // debug
+
+  if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  return children;
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

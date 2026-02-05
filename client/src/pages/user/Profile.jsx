@@ -1,171 +1,233 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../../utils/axiosInstance";
 import "../../styles/profile.css";
 
 const Profile = () => {
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
-  const [activeTab, setActiveTab] = useState("basic");
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    emailNotifications: true,
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [notification, setNotification] = useState(true);
+  const [avatar, setAvatar] = useState("");
+
+const uploadAvatar = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("avatar", file);
+
+  const { data } = await axios.post("/user/avatar", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
-  const [message, setMessage] = useState("");
+
+  setAvatar(data.avatar);
+};
+
 
   useEffect(() => {
-    if (!userInfo?.token) return;
-
-    const loadProfile = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:5000/api/users/profile",
-          {
-            headers: {
-              Authorization: `Bearer ${userInfo.token}`,
-            },
-          }
-        );
-
-        setFormData({
-          name: res.data.name || "",
-          email: res.data.email || "",
-          phone: res.data.phone || "",
-          emailNotifications: res.data.preferences?.emailNotifications ?? true,
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
     loadProfile();
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
+  const loadProfile = async () => {
+    const { data } = await axios.get("/user/profile");
+    setName(data.name || "");
+    setEmail(data.email || "");
+    setAvatar(data.avatar || "");
+    setNotification(Boolean(data.notificationEnabled));
+  };
+
+  const updateProfile = async () => {
+    await axios.put("/user/profile", { name, avatar });
+    alert("Profile updated");
+  };
+
+  const changePassword = async () => {
+    await axios.put("/user/change-password", {
+      currentPassword,
+      newPassword,
     });
+    alert("Password changed successfully");
+    setCurrentPassword("");
+    setNewPassword("");
   };
 
-  const updateProfile = async (e) => {
-    e.preventDefault();
-    setMessage("");
+const toggleNotify = async () => {
+  const newValue = !notification;
 
-    try {
-      await axios.put(
-        "http://localhost:5000/api/users/profile",
-        {
-          name: formData.name,
-          phone: formData.phone,
-          preferences: {
-            emailNotifications: formData.emailNotifications,
-          },
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
+  const { data } = await axios.put("/user/notification", {
+    enabled: newValue,
+  });
 
-      setMessage("Profile updated successfully ✅");
-    } catch (error) {
-      setMessage("Failed to update profile ❌");
-    }
-  };
+  setNotification(data.status);
+};
 
-  return (
-    <div className="user-layout">
-      
+return (
+  <div className="user-layout">
+    <main className="main-content">
+      <div className="profile-page">
 
-      <main className="page-content">
-        <div className="profile-container">
-          <h1>User Profile</h1>
+        {/* HEADER */}
+        <div className="profile-header">
+          <div>
+            <h1>My Profile</h1>
+            <p>Manage your personal information and security</p>
+          </div>
+        </div>
 
-          {/* Tabs */}
-          <div className="profile-tabs">
-            <button
-              className={activeTab === "basic" ? "active" : ""}
-              onClick={() => setActiveTab("basic")}
-            >
-              Basic Info
-            </button>
-            <button
-              className={activeTab === "preferences" ? "active" : ""}
-              onClick={() => setActiveTab("preferences")}
-            >
-              Preferences
-            </button>
-            <button
-              className={activeTab === "security" ? "active" : ""}
-              onClick={() => setActiveTab("security")}
-            >
-              Security
-            </button>
+        <div className="profile-grid">
+
+          {/* AVATAR */}
+          <div className="profile-avatar-card">
+            <div className="avatar-wrapper">
+              <img
+                src={
+                  avatar
+                    ? `http://localhost:5000${avatar}`
+                    : "/avatar.png"
+                }
+                alt="Avatar"
+                className="profile-avatar"
+              />
+            </div>
+
+            <div className="avatar-upload">
+              <input
+                type="file"
+                id="avatar"
+                accept="image/*"
+                onChange={uploadAvatar}
+              />
+              <label htmlFor="avatar">Update Avatar</label>
+            </div>
+
+            <p className="avatar-hint">
+              JPG / PNG • Max 2MB
+            </p>
           </div>
 
-          {/* Content */}
-          <form className="profile-card" onSubmit={updateProfile}>
-            {activeTab === "basic" && (
-              <>
-                <label>Full Name</label>
+          {/* ACCOUNT SUMMARY + SECURITY */}
+          <div className="profile-summary-stack">
+            {/* ACCOUNT SUMMARY */}
+            <div className="profile-summary-card">
+              <h4>Account Summary</h4>
+
+              <div className="summary-item">
+                <span>Status</span>
+                <strong>Active</strong>
+              </div>
+
+              <div className="summary-item">
+                <span>Role</span>
+                <strong>User</strong>
+              </div>
+
+              <div className="summary-item">
+                <span>Email Alerts</span>
+                <strong>{notification ? "Enabled" : "Disabled"}</strong>
+              </div>
+            </div>
+
+            {/* SECURITY (MOVED HERE) */}
+            <div className="profile-card security">
+              <div className="card-header">
+                <h3>Security</h3>
+                <span className="card-sub">
+                  Update your password
+                </span>
+              </div>
+
+              <input
+                type="password"
+                placeholder="Current Password"
+                value={currentPassword}
+                onChange={(e) =>
+                  setCurrentPassword(e.target.value)
+                }
+              />
+
+              <input
+                type="password"
+                placeholder="New Password"
+                value={newPassword}
+                onChange={(e) =>
+                  setNewPassword(e.target.value)
+                }
+              />
+
+              <div className="card-actions">
+                <button
+                  className="primary-btn"
+                  onClick={changePassword}
+                >
+                  Update Password
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* BASIC INFO + EMAIL (SIDE BY SIDE) */}
+          <div className="profile-sections two-col">
+
+            {/* BASIC INFO */}
+            <div className="profile-card basic-info">
+              <div className="card-header">
+                <h3>Basic Information</h3>
+                <span className="card-sub">
+                  Visible to support team
+                </span>
+              </div>
+
+              <label>Name</label>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+
+              <label>Email</label>
+              <input value={email} disabled />
+
+              <div className="card-actions">
+                <button
+                  className="primary-btn"
+                  onClick={updateProfile}
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+
+            {/* EMAIL NOTIFICATION (RIGHT SIDE) */}
+            <div className="profile-card toggle-card">
+              <div>
+                <h4>Email Notifications</h4>
+                <p className="card-sub">
+                  Get ticket updates via email
+                </p>
+              </div>
+
+              <label className="switch">
                 <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
+                  type="checkbox"
+                  checked={notification}
+                  onChange={toggleNotify}
                 />
+                <span className="slider"></span>
+              </label>
+            </div>
 
-                <label>Email (read-only)</label>
-                <input type="email" value={formData.email} disabled />
-
-                <label>Phone</label>
-                <input
-                  type="text"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="Optional"
-                />
-              </>
-            )}
-
-            {activeTab === "preferences" && (
-              <>
-                <label className="checkbox">
-                  <input
-                    type="checkbox"
-                    name="emailNotifications"
-                    checked={formData.emailNotifications}
-                    onChange={handleChange}
-                  />
-                  Receive email notifications
-                </label>
-              </>
-            )}
-
-            {activeTab === "security" && (
-              <p className="security-note">
-                🔒 Password change feature can be added later.
-              </p>
-            )}
-
-            {message && <p className="profile-message">{message}</p>}
-
-            {activeTab !== "security" && (
-              <button type="submit" className="save-btn">
-                Save Changes
-              </button>
-            )}
-          </form>
+          </div>
         </div>
-      </main>
-    </div>
-  );
+      </div>
+    </main>
+  </div>
+);
+
+
+
 };
 
 export default Profile;
