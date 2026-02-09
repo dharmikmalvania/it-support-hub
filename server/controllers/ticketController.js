@@ -169,42 +169,48 @@ export const closeTicket = async (req, res) => {
    SUBMIT FEEDBACK
 ========================= */
 export const submitFeedback = async (req, res) => {
-  const { rating, comment } = req.body;
+  try {
+    const { rating, comment } = req.body;
 
-  const ticket = await Ticket.findById(req.params.id);
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ message: "Invalid rating" });
+    }
 
-  if (!ticket) {
-    return res.status(404).json({ message: "Ticket not found" });
+    const ticket = await Ticket.findOne({
+      _id: req.params.id,
+      user: req.user._id,
+    });
+
+    if (!ticket) {
+      return res.status(404).json({ message: "Ticket not found" });
+    }
+
+    if (ticket.status !== "Closed") {
+      return res
+        .status(400)
+        .json({ message: "Feedback allowed only after ticket is closed" });
+    }
+
+    if (ticket.feedback) {
+      return res
+        .status(400)
+        .json({ message: "Feedback already submitted" });
+    }
+
+    ticket.feedback = {
+      rating,
+      comment,
+      submittedAt: new Date(),
+    };
+
+    await ticket.save();
+
+    res.json({ message: "Feedback submitted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to submit feedback" });
   }
-
-  if (ticket.status !== "Closed") {
-    return res
-      .status(400)
-      .json({ message: "Ticket must be closed first" });
-  }
-
-  if (ticket.feedback && ticket.feedback.rating) {
-    return res
-      .status(400)
-      .json({ message: "Feedback already submitted" });
-  }
-
-  ticket.feedback = {
-    rating,
-    comment,
-    submittedAt: new Date(),
-  };
-
-  await ticket.save();
-
-  await createNotification(
-  ticket.user._id,
-  "⭐ Thank you for submitting feedback"
-);
-
-  
-  res.json({ message: "Feedback submitted successfully" });
 };
+
 
 export const closeTicketWithFeedback = async (req, res) => {
   try {
@@ -248,3 +254,5 @@ export const getTicketHistory = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch ticket history" });
   }
 };
+
+

@@ -1,0 +1,179 @@
+/* =====================================
+   TECH PERFORMANCE – REPORT STYLE
+===================================== */
+
+.tech-performance-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ===============================
+   HEADER
+================================ */
+.tech-performance-header {
+  margin-bottom: 40px;
+}
+
+.tech-performance-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #243447;
+}
+
+.tech-performance-header p {
+  margin-top: 6px;
+  font-size: 15px;
+  color: #6B7280;
+}
+
+/* ===============================
+   KPI STRIP (NOT CARDS)
+================================ */
+.tech-performance-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin-bottom: 48px;
+
+  background: #ffffff;
+  border-radius: 22px;
+  border: 1px solid rgba(70, 130, 169, 0.18);
+  overflow: hidden;
+}
+
+/* KPI BLOCK */
+.tech-perf-card {
+  padding: 26px 20px;
+  text-align: center;
+  position: relative;
+}
+
+/* Divider */
+.tech-perf-card:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 20%;
+  height: 60%;
+  width: 1px;
+  background: rgba(70, 130, 169, 0.15);
+}
+
+.tech-perf-card h3 {
+  font-size: 36px;
+  font-weight: 800;
+  color: #4682A9;
+  margin-bottom: 6px;
+}
+
+.tech-perf-card p {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* ===============================
+   HISTORY SECTION (TIMELINE)
+================================ */
+.tech-performance-history {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 26px;
+  border: 1px solid rgba(70, 130, 169, 0.15);
+
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.tech-performance-history h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* EMPTY */
+.tech-empty {
+  font-size: 14px;
+  color: #6B7280;
+}
+
+/* ===============================
+   HISTORY LIST
+================================ */
+.tech-history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
+/* Vertical line */
+.tech-history-list::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(70, 130, 169, 0.2);
+}
+
+/* ITEM */
+.tech-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 0 14px 24px;
+  position: relative;
+}
+
+/* DOT */
+.tech-history-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  background: #4682A9;
+  border-radius: 50%;
+}
+
+/* TITLE */
+.history-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #243447;
+}
+
+/* RATING */
+.history-rating {
+  font-size: 14px;
+  font-weight: 700;
+  color: #4682A9;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 900px) {
+  .tech-performance-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tech-perf-card:nth-child(2)::after {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .tech-performance-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .tech-perf-card::after {
+    display: none;
+  }
+}

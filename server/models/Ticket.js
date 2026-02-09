@@ -7,6 +7,10 @@ const ticketSchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
+    assignedTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // technician
+    },
 
     title: {
       type: String,
@@ -35,10 +39,40 @@ const ticketSchema = mongoose.Schema(
     },
 
     status: {
-      type: String,
-      enum: ["Open", "Closed"],
-      default: "Open",
+  type: String,
+  enum: ["Open", "In Progress", "Waiting for User", "Closed"],
+  default: "Open",
     },
+
+   workLog: {
+  type: [
+    {
+      message: String,
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+      by: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    },
+  ],
+  default: [], // 🔥 THIS FIXES EVERYTHING
+},
+
+
+resolution: {
+  summary: String,
+  rootCause: String,
+  fixedAt: Date,
+},
+
+startedAt: Date,
+closedAt: Date,
+
+
+
 
     // ✅ FEEDBACK (BUSINESS LOGIC)
     feedback: {

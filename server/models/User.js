@@ -17,23 +17,34 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
+    role: {
+      type: String,
+      enum: ["user", "technician", "admin"],
+      default: "user",
+    },
+
+    isApproved: {
+      type: Boolean,
+      default: function () {
+        return this.role === "technician" ? false : true;
+      },
+    },
+
+    technicianProfile: {
+      phone: String,
+      skills: String,
+      experience: Number,
+    },
+
     isVerified: {
       type: Boolean,
       default: false,
     },
 
-    otp: {
-      type: Number,
-    },
+    otp: Number,
+    otpExpire: Date,
 
-    otpExpire: {
-      type: Date,
-    },
-
-    avatar: {
-      type: String,
-      default: "",
-    },
+    avatar: { type: String, default: "" },
 
     emailNotifications: {
       type: Boolean,
@@ -43,7 +54,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ✅ CORRECT PRE SAVE HOOK
+// 🔐 Password hash
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 10);

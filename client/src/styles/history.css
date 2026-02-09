@@ -1,9 +1,10 @@
-:root {
+.history-page {
   --c1: #b1b2ff;
   --c2: #aac4ff;
   --c3: #d2daff;
   --c4: #eef1ff;
 }
+
 
 /* Page */
 .history-page {
@@ -122,7 +123,7 @@
 }
 
 /* Status */
-.status.closed {
+.history-page .status.closed {
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 12px;
@@ -131,46 +132,48 @@
   color: #4b56d2;
 }
 
+
 /* Priority */
-.priority {
+.history-page .priority {
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
 }
 
-.priority.low {
+.history-page .priority.low {
   background: #eef1ff;
 }
 
-.priority.medium {
+.history-page .priority.medium {
   background: #fff3cd;
 }
 
-.priority.high {
+.history-page .priority.high {
   background: #fde2e2;
 }
 
+
 /* Badge */
-.badge {
+.history-page .badge {
   padding: 6px 14px;
   border-radius: 18px;
   font-size: 12px;
   font-weight: 600;
 }
 
-.badge.success {
+.history-page .badge.success {
   background: #e6f4ea;
   color: #2e7d32;
 }
 
-.badge.muted {
+.history-page .badge.muted {
   background: #f1f1f1;
   color: #999;
 }
 
 /* Button */
-.view-btn {
+.history-page .view-btn {
   padding: 8px 18px;
   border-radius: 16px;
   border: none;
@@ -181,7 +184,8 @@
   cursor: pointer;
 }
 
-.view-btn:hover {
+
+.history-page .view-btn:hover {
   opacity: 0.9;
 }
 

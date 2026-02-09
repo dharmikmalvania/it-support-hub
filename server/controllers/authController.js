@@ -21,9 +21,7 @@ export const verifyOtp = async (req, res) => {
     const { userId, otp } = req.body;
 
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(400).json({ message: "User not found" });
-    }
+    if (!user) return res.status(400).json({ message: "User not found" });
 
     if (user.otp !== Number(otp)) {
       return res.status(400).json({ message: "Invalid OTP" });
@@ -34,13 +32,17 @@ export const verifyOtp = async (req, res) => {
     user.otpExpire = undefined;
     await user.save();
 
-    return res.json({ message: "OTP verified successfully" });
-
+    return res.json({
+      message:
+        user.role === "technician"
+          ? "Email verified. Await admin approval."
+          : "OTP verified successfully",
+    });
   } catch (error) {
-    console.error("VERIFY OTP ERROR:", error);
     return res.status(500).json({ message: "OTP verification failed" });
   }
 };
+
 
 
 /* =====================================================
@@ -50,56 +52,54 @@ export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // 1️⃣ Validate input
     if (!name || !email || !password) {
-      return res.status(400).json({
-        message: "All fields are required",
-      });
+      return res.status(400).json({ message: "All fields are required" });
     }
 
-    // 2️⃣ Check existing user
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({
-        message: "Email already registered. Please login.",
-      });
+      return res.status(400).json({ message: "Email already registered" });
     }
 
-    // 3️⃣ Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000);
 
-    // 4️⃣ Create user (password hashed by schema)
-    const user = await User.create({
+    const user = new User({
       name,
       email,
       password,
+      role: "user",
       otp,
-      otpExpire: Date.now() + 10 * 60 * 1000, // 10 minutes
+      otpExpire: Date.now() + 10 * 60 * 1000,
       isVerified: false,
     });
 
-    console.log("REGISTER OTP:", otp);
+    await user.save();
 
-    // 5️⃣ Send OTP email
+    // 🔥 SEND EMAIL
     await sendEmail(
       email,
       "Verify your IT Support Hub account",
-      `Your OTP is ${otp}`
+      `<h3>Your OTP is</h3><h2>${otp}</h2>`
     );
 
-    // 6️⃣ Success response
     return res.status(201).json({
       message: "OTP sent to email",
       userId: user._id,
     });
 
   } catch (error) {
-    console.error("REGISTER ERROR:", error);
-    return res.status(500).json({
-      message: "Registration failed",
-    });
+    console.error("REGISTER ERROR:", error.message);
+
+    // 🧹 CLEANUP: delete user if email failed
+    if (error.message === "Email not sent") {
+      await User.deleteOne({ email: req.body.email });
+    }
+
+    return res.status(500).json({ message: "Registration failed. Try again." });
   }
 };
+
+
 
 /* =====================================================
    LOGIN CONTROLLER
@@ -108,58 +108,89 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // 1️⃣ Validate input
-    if (!email || !password) {
-      return res.status(400).json({
-        message: "Email and password are required",
-      });
-    }
-
-    // 2️⃣ Find user
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({
-        message: "Invalid email or password",
-      });
-    }
+    if (!user)
+      return res.status(400).json({ message: "Invalid credentials" });
 
-    // 3️⃣ Check email verification
-    if (!user.isVerified) {
+    if (!user.isVerified)
+      return res.status(403).json({ message: "Please verify email first" });
+
+    if (user.role === "technician" && !user.isApproved)
       return res.status(403).json({
-        message: "Please verify your email first",
+        message: "Technician profile under admin review",
       });
-    }
 
-    // 4️⃣ Match password
     const isMatch = await user.matchPassword(password);
-    if (!isMatch) {
-      return res.status(400).json({
-        message: "Invalid email or password",
-      });
-    }
+    if (!isMatch)
+      return res.status(400).json({ message: "Invalid credentials" });
 
-    // 5️⃣ Create JWT token
     const token = jwt.sign(
-      { id: user._id },
+      { id: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
-    // 6️⃣ Success response
-    return res.status(200).json({
-      message: "Login successful",
+    res.json({
       token,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
       },
     });
-
-  } catch (error) {
-    console.error("LOGIN ERROR:", error);
-    return res.status(500).json({
-      message: "Login failed",
-    });
+  } catch (err) {
+    res.status(500).json({ message: "Login failed" });
   }
 };
+
+
+
+/* =====================================================
+    Technician REGISTER CONTROLLER (SEND OTP)
+===================================================== */
+
+export const registerTechnician = async (req, res) => {
+  try {
+    const { name, email, password, phone, skills, experience } = req.body;
+
+    if (!name || !email || !password || !phone || !skills || !experience) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    const technician = await User.create({
+      name,
+      email,
+      password,
+      role: "technician",
+      technicianProfile: { phone, skills, experience },
+      otp,
+      otpExpire: Date.now() + 10 * 60 * 1000,
+      isVerified: false,
+      isApproved: false,
+    });
+
+    await sendEmail(
+      email,
+      "Verify your Technician Application",
+      `Your OTP is ${otp}`
+    );
+
+    return res.status(201).json({
+      message: "OTP sent. Verify email.",
+      userId: technician._id,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Technician registration failed" });
+  }
+};
+
+
+

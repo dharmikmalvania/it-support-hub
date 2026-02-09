@@ -46,29 +46,7 @@ const MyTickets = () => {
   }, []);
 
   // 🔹 Close ticket
-  const closeTicket = async (id) => {
-    try {
-      await axios.put(
-        `http://localhost:5000/api/tickets/${id}/close`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
-
-      setTickets(
-        tickets.map((ticket) =>
-          ticket._id === id
-            ? { ...ticket, status: "Closed" }
-            : ticket
-        )
-      );
-    } catch (error) {
-      alert("Failed to close ticket");
-    }
-  };
+  
 
 return (
   <div className="user-layout">
@@ -141,52 +119,45 @@ return (
                     </td>
 
                     {/* ACTION */}
-                    <td>
-                      {ticket.status === "Open" && (
-                        <div className="ticket-actions">
-                          <button
-                            className="action-btn edit-btn"
-                            onClick={() =>
-                              navigate(`/user/edit-ticket/${ticket._id}`, {
-                                state: ticket,
-                              })
-                            }
-                          >
-                            <FaEdit />
-                            <span>Edit</span>
-                          </button>
+    <td>
+  {/* OPEN → Edit allowed */}
+  {ticket.status === "Open" && (
+    <div className="ticket-actions">
+      <button
+        className="action-btn edit-btn"
+        onClick={() =>
+          navigate(`/user/edit-ticket/${ticket._id}`, {
+            state: ticket,
+          })
+        }
+      >
+        <FaEdit />
+        <span>Edit</span>
+      </button>
+    </div>
+  )}
 
-                          <button
-                            className="action-btn close-btn"
-                            onClick={() =>
-                              navigate(`/user/feedback/${ticket._id}`)
-                            }
-                          >
-                            <FaCommentDots />
-                            <span>Close</span>
-                          </button>
-                        </div>
-                      )}
+  {/* CLOSED → Feedback allowed */}
+  {ticket.status === "Closed" && !ticket.feedback && (
+    <button
+      className="action-btn feedback-btn"
+      onClick={() =>
+        navigate(`/user/feedback/${ticket._id}`)
+      }
+    >
+      <FaCommentDots />
+      <span>Give Feedback</span>
+    </button>
+  )}
 
-                      {ticket.status === "Closed" && !ticket.feedback && (
-                        <button
-                          className="action-btn feedback-btn"
-                          onClick={() =>
-                            navigate(`/user/feedback/${ticket._id}`)
-                          }
-                        >
-                          <FaCommentDots />
-                          <span>Feedback</span>
-                        </button>
-                      )}
-
-                      {ticket.status === "Closed" && ticket.feedback && (
-                        <span className="feedback-done">
-                          <FaCheckCircle />
-                          <span>Submitted</span>
-                        </span>
-                      )}
-                    </td>
+  {/* CLOSED → Feedback submitted */}
+  {ticket.status === "Closed" && ticket.feedback && (
+    <span className="feedback-done">
+      <FaCheckCircle />
+      <span>Submitted</span>
+    </span>
+  )}
+</td>
                   </tr>
                 ))}
               </tbody>

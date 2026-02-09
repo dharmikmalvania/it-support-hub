@@ -7,4 +7,10 @@
   flex: 1;
   padding: 32px;
   background: linear-gradient(180deg, #eef1ff, #e6ebff);
+
+  /* 🔥 ADD THESE */
+  margin-left: 74px;              /* sidebar width */
+  max-width: 1400px;              /* control stretch */
+  margin-right: auto;
 }
+

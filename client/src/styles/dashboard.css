@@ -1,28 +1,27 @@
-/* =========================
-   DASHBOARD BASE
-========================= */
+/* DASHBOARD WRAPPER */
 .dashboard {
-  padding: 32px;
-  max-width: 1200px;
-  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+   max-width: 1280px; 
+  margin: 0 auto; 
 }
 
-/* =========================
-   HEADER / HERO
-========================= */
+/* HERO */
 .dashboard-header {
+  background: linear-gradient(135deg, #ffffff, #f4f6ff);
+  padding: 22px 26px;
+  border-radius: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, #eef1ff, #f6f7ff);
-  padding: 28px;
-  border-radius: 26px;
-  margin-bottom: 28px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
 }
 
 .dashboard-header h2 {
-  font-size: 28px;
-  color: #2d2f55;
+  margin: 0;
+  font-size: 26px;
+  color: var(--sb-text);
 }
 
 .dashboard-header p {
@@ -30,62 +29,72 @@
   color: #555;
 }
 
+/* HERO ACTIONS */
 .hero-actions {
   display: flex;
   gap: 14px;
 }
 
 .action-btn {
-  padding: 12px 22px;
-  border-radius: 18px;
+  padding: 12px 20px;
+  border-radius: 14px;
   border: none;
-  background: #ffffff;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  background: #fff;
+  color: var(--sb-text);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
 }
 
 .action-btn.primary {
-  background: linear-gradient(135deg, #b1b2ff, #aac4ff);
+  background: var(--sb-active);
   color: #fff;
 }
 
-/* =========================
-   STATS GRID
-========================= */
+/* STATS GRID */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(220px, 1fr));
   gap: 22px;
-  margin-bottom: 32px;
 }
 
+
+
 .stat-card {
-  background: #ffffff;
-  padding: 24px;
-  border-radius: 24px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #fff;
+  padding: 22px;
+  border-radius: 22px;
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  transition: transform 0.25s ease;
 }
 
 .stat-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.18);
+  transform: translateY(-4px);
 }
 
 .stat-card p {
-  font-size: 13px;
-  color: #777;
+  margin: 0;
+  font-size: 14px;
+  color: #666;
 }
 
 .stat-card h3 {
-  margin-top: 8px;
-  font-size: 30px;
-  color: #2d2f55;
+  margin-top: 10px;
+  font-size: 26px;
+  color: var(--sb-text);
 }
 
+/* HIGHLIGHT CARD */
 .stat-card.highlight {
-  background: linear-gradient(135deg, #b1b2ff, #aac4ff);
+  background: linear-gradient(135deg, #b1b2ff, #d2daff);
+  color: #fff;
 }
 
 .stat-card.highlight p,
@@ -93,24 +102,19 @@
   color: #fff;
 }
 
-/* =========================
-   MAIN GRID
-========================= */
+/* GRID */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1.2fr;
   gap: 28px;
-  margin-bottom: 28px;
 }
 
-/* =========================
-   CARD
-========================= */
+/* CARD */
 .card {
-  background: #ffffff;
-  padding: 26px;
-  border-radius: 26px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+  background: #fff;
+  border-radius: 24px;
+  padding: 22px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
 }
 
 /* CARD HEADER */
@@ -122,26 +126,26 @@
 }
 
 .card-header h3 {
+  margin: 0;
   font-size: 18px;
-  color: #2d2f55;
+  color: var(--sb-text);
 }
 
 .card-header span {
   font-size: 13px;
-  color: #777;
+  color: #888;
 }
 
+/* LINK BUTTON */
 .link-btn {
   border: none;
   background: none;
+  color: var(--sb-active);
   font-weight: 600;
-  color: #4b56d2;
   cursor: pointer;
 }
 
-/* =========================
-   TICKET LIST
-========================= */
+/* TICKET LIST */
 .ticket-list {
   list-style: none;
   padding: 0;
@@ -153,75 +157,45 @@
   justify-content: space-between;
   align-items: center;
   padding: 14px 0;
-  border-bottom: 1px solid #eef1ff;
+  border-bottom: 1px solid #eee;
 }
 
 .ticket-list li:last-child {
   border-bottom: none;
 }
 
-.ticket-list small {
-  font-size: 12px;
-  color: #999;
-}
-
-/* STATUS BADGE */
+/* BADGES */
 .badge {
   padding: 6px 14px;
-  border-radius: 14px;
+  border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
 }
 
 .badge.open {
-  background: #eafffa;
-  color: #0aa;
+  background: rgba(177, 178, 255, 0.2);
+  color: var(--sb-text);
 }
 
 .badge.closed {
-  background: #eef1ff;
-  color: #4b56d2;
+  background: rgba(46, 204, 113, 0.2);
+  color: #27ae60;
 }
 
-/* =========================
-   CHART ENHANCEMENT
-========================= */
-.card canvas,
-.card svg {
-  margin-top: 10px;
-}
-
-/* Optional chart glow effect */
-.card .recharts-wrapper {
-  filter: drop-shadow(0 12px 30px rgba(177, 178, 255, 0.35));
-}
-
-/* =========================
-   TIP
-========================= */
+/* TIP */
 .dashboard-tip {
-  padding: 14px 20px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #eef1ff, #f6f7ff);
-  color: #4b56d2;
-  font-weight: 500;
+  margin-top: 20px;
+  padding: 18px 22px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #eef1ff, #ffffff);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  color: #555;
+  font-size: 14px;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 900px) {
+@media (min-width: 1600px) {
   .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .dashboard-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
   }
 }

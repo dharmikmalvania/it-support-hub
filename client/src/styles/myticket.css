@@ -1,9 +1,10 @@
-:root {
+.myticket-page {
   --c1: #b1b2ff;
   --c2: #aac4ff;
   --c3: #d2daff;
   --c4: #eef1ff;
 }
+
 /* Title column */
 .title-cell {
   display: flex;
@@ -11,14 +12,14 @@
 }
 
 /* Title wrap */
-.ticket-title-wrap {
+.myticket-page .ticket-title-wrap {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
 /* Main title */
-.ticket-title {
+.myticket-page .ticket-title {
   font-weight: 600;
   color: #2d2f55;
   font-size: 14px;
@@ -128,19 +129,19 @@
 }
 
 /* Status */
-.status {
+.myticket-page .status {
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
 }
 
-.status.open {
+.myticket-page .status.open {
   background: #e3fdfd;
   color: #008080;
 }
 
-.status.closed {
+.myticket-page .status.closed {
   background: #e8f0ff;
   color: #2f4ed8;
 }
@@ -163,7 +164,7 @@
   color: #856404;
 }
 
-.priority.high {
+.myticket-page .priority.high {
   background: #fde2e2;
   color: #b00020;
 }
@@ -193,7 +194,7 @@
   color: #fff;
 }
 
-.close-btn,
+.myticket-page .close-btn,
 .feedback-btn {
   background: var(--c1);
   color: #fff;
@@ -237,4 +238,13 @@
   .ticket-table td {
     padding: 10px 0;
   }
+}
+.request-btn {
+  background: #f59e0b;
+  color: #1f2937;
+}
+
+.feedback-done.pending {
+  color: #f59e0b;
+  font-weight: 600;
 }

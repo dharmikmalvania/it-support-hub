@@ -7,6 +7,7 @@ import {
   updateTicket,
   closeTicketWithFeedback,
   getTicketStats,
+  submitFeedback,
 } from "../controllers/ticketController.js";
 
 import { protect } from "../middleware/authMiddleware.js";
@@ -30,6 +31,12 @@ router.post("/", protect, upload.single("attachment"), createTicket);
 
 router.post("/:id/close-feedback", protect, closeTicketWithFeedback);
 router.put("/:id", protect, updateTicket);
+router.post(
+  "/tickets/:id/feedback",
+  protect,
+  submitFeedback
+);
+
 
 // ✅ DYNAMIC ROUTE LAST
 router.get("/:id", protect, getTicketById);

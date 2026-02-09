@@ -6,125 +6,105 @@ import "../../styles/ticketDetail.css";
 const TicketDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const token = localStorage.getItem("token");
 
   const [ticket, setTicket] = useState(null);
 
- useEffect(() => {
-  const fetchTicket = async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        alert("Session expired. Please login again.");
-        navigate("/login");
-        return;
-      }
-
-      const res = await axios.get(
-        `http://localhost:5000/api/tickets/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // ✅ FIX
-          },
+  useEffect(() => {
+    const fetchTicket = async () => {
+      try {
+        if (!token) {
+          alert("Session expired. Please login again.");
+          navigate("/login");
+          return;
         }
-      );
 
-      setTicket(res.data);
-    } catch (error) {
-      console.error("Failed to load ticket", error.response?.data || error);
-      alert("Failed to load ticket");
-      navigate("/user/my-tickets");
-    }
-  };
+        const res = await axios.get(
+          `http://localhost:5000/api/tickets/${id}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-  fetchTicket();
-}, [id, navigate]);
+        setTicket(res.data);
+      } catch (error) {
+        alert("Failed to load ticket");
+        navigate("/user/my-tickets");
+      }
+    };
 
+    fetchTicket();
+  }, [id]);
 
   if (!ticket) return <p>Loading ticket...</p>;
 
+  return (
+    <div className="ticket-detail-page">
+      <div className="ticket-detail-header">
+        <div>
+          <h1>{ticket.title}</h1>
+          <p>Your support request details</p>
+        </div>
+        <button onClick={() => navigate(-1)}>← Back</button>
+      </div>
 
-return (
-  <div className="user-layout">
-    <main className="main-content">
-      <div className="ticket-detail-page">
+      <div className="ticket-detail-grid">
+        {/* DETAILS */}
+        <div className="ticket-detail-card">
+          <div className="meta-grid">
+            <div>
+              <span>Status</span>
+              <p className={`status ${ticket.status.toLowerCase()}`}>
+                {ticket.status}
+              </p>
+            </div>
 
-        {/* HEADER */}
-        <div className="ticket-detail-header">
-          <div>
-            <h1>Ticket Details</h1>
-            <p>Detailed view of your support request</p>
+            <div>
+              <span>Priority</span>
+              <p className={`priority ${ticket.priority.toLowerCase()}`}>
+                {ticket.priority}
+              </p>
+            </div>
+
+            <div>
+              <span>Category</span>
+              <p>{ticket.category}</p>
+            </div>
           </div>
 
-          <button className="back-btn" onClick={() => navigate(-1)}>
-            ← Back
-          </button>
+          <h3>Description</h3>
+          <p>{ticket.description}</p>
+
+          {ticket.status === "Closed" && ticket.resolution && (
+            <div className="resolution-box">
+              <h3>Resolution</h3>
+              <p><b>Summary:</b> {ticket.resolution.summary}</p>
+              <p>
+                <b>Fixed At:</b>{" "}
+                {new Date(ticket.resolution.fixedAt).toLocaleString()}
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* MAIN GRID */}
-        <div className="ticket-detail-grid">
+        {/* FEEDBACK */}
+        <div className="ticket-feedback-card">
+          <h3>Feedback</h3>
 
-          {/* LEFT – DETAILS */}
-          <div className="ticket-detail-card">
-            <div className="meta-grid">
-              <div className="meta-item">
-                <span>Title</span>
-                <p>{ticket.title}</p>
+          {ticket.feedback ? (
+            <>
+              <div className="rating-box">
+                ⭐ {ticket.feedback.rating} / 5
               </div>
-
-              <div className="meta-item">
-                <span>Category</span>
-                <p>{ticket.category}</p>
-              </div>
-
-              <div className="meta-item">
-                <span>Priority</span>
-                <p className={`priority ${ticket.priority.toLowerCase()}`}>
-                  {ticket.priority}
-                </p>
-              </div>
-
-              <div className="meta-item">
-                <span>Status</span>
-                <p className={`status ${ticket.status.toLowerCase()}`}>
-                  {ticket.status}
-                </p>
-              </div>
-            </div>
-
-            <div className="detail-section">
-              <h3>Description</h3>
-              <p>{ticket.description}</p>
-            </div>
-          </div>
-
-          {/* RIGHT – FEEDBACK */}
-          <div className="ticket-feedback-card">
-            <h3>Feedback</h3>
-
-            {ticket.feedback ? (
-              <>
-                <div className="rating-box">
-                  ⭐ {ticket.feedback.rating} / 5
-                </div>
-                <p className="feedback-text">
-                  {ticket.feedback.comment}
-                </p>
-              </>
-            ) : (
-              <p className="no-feedback">
-                Feedback not submitted for this ticket
-              </p>
-            )}
-          </div>
-
+              <p>{ticket.feedback.comment}</p>
+            </>
+          ) : (
+            <p className="no-feedback">
+              Feedback not submitted yet
+            </p>
+          )}
         </div>
       </div>
-    </main>
-  </div>
-);
-
+    </div>
+  );
 };
 
 export default TicketDetails;

@@ -1,0 +1,146 @@
+/* ===============================
+   ADMIN LAYOUT
+================================ */
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #F4F6FA;
+}
+
+.admin-main {
+  flex: 1;
+  margin-left: 72px;
+  padding: 36px;
+  background: linear-gradient(180deg, #F4F6FA, #E9EEF5);
+  color: #243447;
+}
+
+/* ===============================
+   SIDEBAR
+================================ */
+
+.admin-sidebar {
+  width: 72px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  background: linear-gradient(180deg, #1F3A5F, #274C77);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 0;
+
+  box-shadow: 4px 0 18px rgba(0, 0, 0, 0.25);
+}
+
+/* LOGO */
+.admin-sidebar-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #3A7CA5;
+  color: #F1FAEE;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 26px;
+}
+
+/* MENU */
+.admin-sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+/* ITEM */
+.admin-side-item {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #F1FAEE;
+  font-size: 18px;
+  position: relative;
+  transition: all 0.25s ease;
+}
+
+/* ICON SIZE */
+.admin-side-item svg {
+  font-size: 20px;
+}
+
+/* HOVER */
+.admin-side-item:hover {
+  background: rgba(129, 195, 215, 0.25);
+  transform: translateX(3px);
+}
+
+/* ACTIVE */
+.admin-side-item.active {
+  background: #3A7CA5;
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(58, 124, 165, 0.6);
+}
+
+.admin-side-item.active::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  width: 5px;
+  height: 26px;
+  background: #81C3D7;
+  border-radius: 6px;
+}
+
+/* TOOLTIP */
+.admin-side-item::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 62px;
+
+  background: #243447;
+  color: #ffffff;
+
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.admin-side-item:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ===============================
+   LOGOUT
+================================ */
+
+.admin-sidebar-bottom {
+  margin-top: auto;
+  padding-bottom: 16px;
+}
+
+.admin-side-item.logout {
+  color: #E63946;
+}
+
+.admin-side-item.logout:hover {
+  background: rgba(230, 57, 70, 0.25);
+}

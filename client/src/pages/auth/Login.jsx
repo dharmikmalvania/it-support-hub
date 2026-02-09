@@ -11,37 +11,38 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // 🔥 STOP PAGE REFRESH
-    setError("");
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        { email, password }
-      );
+    const res = await axios.post(
+      "http://localhost:5000/api/auth/login",
+      { email, password }
+    );
 
-      console.log("LOGIN RESPONSE:", res.data);
+    localStorage.setItem("token", res.data.token);
+    localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      // ✅ SAVE TOKEN
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+    const role = res.data.user.role;
 
-      console.log("TOKEN SAVED:", localStorage.getItem("token"));
+if (role === "technician") {
+  navigate("/technician/dashboard");
+} else if (role === "admin") {
+  navigate("/admin/dashboard");
+} else {
+  navigate("/user/dashboard");
+}
 
-      // ✅ FORCE REDIRECT (React 18 safe)
-      setTimeout(() => {
-        navigate("/user/Dashboard", { replace: true });
-      }, 0);
+  } catch (err) {
+    setError(err.response?.data?.message || "Login failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="auth-wrapper">
@@ -76,6 +77,10 @@ const Login = () => {
 <div className="auth-footer">
   Don’t have an account? <Link to="/register">Register</Link>
 </div>
+<div className="auth-footer">
+  Technician? <Link to="/register/technician">Apply here</Link>
+</div>
+
 
       </div>
     </div>

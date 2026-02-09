@@ -1,0 +1,139 @@
+/* ===============================
+   ADMIN TICKET HISTORY (FINAL)
+================================ */
+
+.admin-history-page {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* HEADER */
+.admin-page-header {
+  margin-bottom: 22px;
+}
+
+.admin-page-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #243447;
+}
+
+.admin-page-header p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* ===============================
+   TABLE CONTAINER
+================================ */
+
+.admin-history-table {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid rgba(58, 124, 165, 0.18);
+  overflow: hidden;
+
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.admin-history-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* HEAD */
+.admin-history-table thead th {
+  text-align: left;
+  padding: 14px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  background: #f9fbfd;
+}
+
+/* BODY */
+.admin-history-table tbody td {
+  padding: 16px;
+  font-size: 14px;
+  color: #243447;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  vertical-align: middle;
+}
+
+/* ROW HOVER */
+.admin-history-table tbody tr:hover {
+  background: #f4f7fb;
+}
+
+/* ===============================
+   CELLS
+================================ */
+
+.ticket-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.ticket-title {
+  font-weight: 600;
+  color: #243447;
+}
+
+.muted {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* RATING */
+.rating-badge {
+  font-size: 13px;
+  font-weight: 700;
+  color: #3a7ca5;
+}
+
+/* ACTION */
+.action-cell {
+  text-align: right;
+}
+
+.admin-view-btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+
+  background: #3a7ca5;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.admin-view-btn:hover {
+  background: #274c77;
+  transform: translateY(-1px);
+}
+
+/* EMPTY */
+.empty-row {
+  text-align: center;
+  padding: 32px;
+  color: #6b7280;
+}
+
+/* NOTE */
+.admin-note {
+  margin-top: 14px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .admin-history-table {
+    overflow-x: auto;
+  }
+}

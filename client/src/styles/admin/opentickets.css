@@ -1,0 +1,148 @@
+/* ===============================
+   ADMIN OPEN TICKETS
+================================ */
+
+.admin-open-page {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* HEADER */
+.admin-page-header {
+  margin-bottom: 24px;
+}
+
+.admin-page-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #243447;
+}
+
+.admin-page-header p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* TABLE WRAPPER */
+.admin-table-wrapper {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid rgba(58, 124, 165, 0.18);
+
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+
+/* TABLE */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 14px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.admin-table td {
+  padding: 16px 12px;
+  font-size: 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* TITLE */
+.ticket-title {
+  font-weight: 600;
+  color: #243447;
+}
+
+/* STATUS */
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-badge.open {
+  background: rgba(252, 227, 138, 0.6);
+  color: #92400e;
+}
+
+/* ASSIGNMENT */
+.not-assigned {
+  color: #d97706;
+  font-weight: 600;
+}
+
+.assigned {
+  color: #2e7d32;
+  font-weight: 700;
+}
+
+/* SELECT */
+.assign-select {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(58, 124, 165, 0.3);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.assign-select:focus {
+  outline: none;
+  border-color: #3a7ca5;
+  box-shadow: 0 0 0 3px rgba(58, 124, 165, 0.15);
+}
+
+/* EMPTY */
+.table-empty {
+  text-align: center;
+  padding: 30px;
+  color: #6b7280;
+}
+
+/* NOTE */
+.admin-note {
+  margin-top: 14px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ===============================
+   BUFFER / SKELETON (OPTIONAL)
+================================ */
+
+.skeleton-row td {
+  height: 48px;
+  background: linear-gradient(
+    90deg,
+    #e5e7eb 25%,
+    #f3f4f6 37%,
+    #e5e7eb 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 6px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .admin-table-wrapper {
+    overflow-x: auto;
+  }
+}
