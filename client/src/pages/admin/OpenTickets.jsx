@@ -79,25 +79,16 @@ return (
                   )}
                 </td>
                 <td>
-                  {!t.assignedTo ? (
-                    <select
-                      className="assign-select"
-                      defaultValue=""
-                      onChange={(e) =>
-                        assignTech(t._id, e.target.value)
-                      }
-                    >
-                      <option value="">Assign Technician</option>
-                      {techs.map((tech) => (
-                        <option key={tech._id} value={tech._id}>
-                          {tech.name}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <span className="assigned">Assigned</span>
-                  )}
-                </td>
+  <button
+    className="admin-view-btn"
+    onClick={() =>
+      window.location.href = `/admin/tickets/${t._id}`
+    }
+  >
+    View
+  </button>
+</td>
+
               </tr>
             ))
           )}

@@ -1,204 +1,197 @@
 /* ===============================
-   ADMIN DASHBOARD
+   ADMIN TICKET DETAIL – REDESIGN
 ================================ */
 
-.admin-container {
-  max-width: 1280px;
+.admin-ticket-detail-page {
+  max-width: 1200px;
   margin: 0 auto;
+  background: #ffffff;
+  padding: 42px;
+  border-radius: 28px;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.12);
 }
 
-/* HEADER */
-.admin-header {
-  margin-bottom: 28px;
+/* TOP BAR */
+.admin-detail-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.admin-title {
-  font-size: 34px;
+.back-btn {
+  border: none;
+  background: none;
   font-weight: 700;
+  color: #3a7ca5;
+  cursor: pointer;
+}
+
+/* STATUS */
+.status-pill {
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.status-pill.open {
+  background: #fff3cd;
+  color: #92400e;
+}
+
+.status-pill.closed {
+  background: #e6f4ea;
+  color: #2e7d32;
+}
+
+/* TITLE */
+.detail-title {
+  margin: 24px 0 32px;
+  font-size: 34px;
+  font-weight: 800;
   color: #243447;
 }
 
-.admin-subtitle {
-  margin-top: 6px;
-  font-size: 15px;
-  color: #6b7280;
-}
-
-/* INSIGHT STRIP */
-.admin-insight {
-  background: linear-gradient(135deg, #1f3a5f, #274c77);
-  color: #f1faee;
-  padding: 16px 22px;
-  border-radius: 16px;
-  margin-bottom: 32px;
-  font-size: 14px;
-}
-
-/* ===============================
-   STATS
-================================ */
-.stats-grid {
+/* MAIN GRID */
+.detail-layout {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 22px;
-  margin-bottom: 42px;
+  grid-template-columns: 2fr 1fr;
+  gap: 36px;
 }
 
-.stat-card {
-  background: #ffffff;
-  padding: 22px;
-  border-radius: 18px;
-  border: 1px solid rgba(58, 124, 165, 0.15);
-
-  box-shadow:
-    0 8px 18px rgba(0, 0, 0, 0.06);
+/* LEFT */
+.detail-left {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
-.stat-card h3 {
-  font-size: 28px;
-  font-weight: 800;
-  color: #3a7ca5;
-  margin-bottom: 6px;
+/* INFO GRID */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
 }
 
-.stat-card p {
-  font-size: 13px;
-  font-weight: 600;
+.info-grid div {
+  background: #f9fbfd;
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid #e5edf5;
+}
+
+.info-grid span {
+  font-size: 12px;
+  font-weight: 700;
   color: #6b7280;
   text-transform: uppercase;
 }
 
-/* ===============================
-   SECTION
-================================ */
-.section {
-  margin-bottom: 44px;
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-}
-
-.section-header h2 {
-  font-size: 22px;
+.info-grid p {
+  margin-top: 6px;
+  font-size: 15px;
   font-weight: 700;
+  color: #243447;
 }
 
-.section-hint {
-  font-size: 13px;
+.info-grid small {
+  font-size: 12px;
   color: #6b7280;
 }
 
-/* ===============================
-   TABLE
-================================ */
-.table-wrapper {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 18px;
-  border: 1px solid rgba(58, 124, 165, 0.15);
-}
+/* PRIORITY */
+.priority.low { color: #2e7d32; }
+.priority.medium { color: #92400e; }
+.priority.high { color: #b91c1c; }
 
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.admin-table th {
-  text-align: left;
-  padding: 12px;
-  font-size: 13px;
-  color: #6b7280;
-}
-
-.admin-table td {
-  padding: 14px 12px;
-  font-size: 14px;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-/* ===============================
-   ACTIVITY
-================================ */
-.activity-list {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 18px;
-  border: 1px solid rgba(58, 124, 165, 0.15);
-}
-
-.activity-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 14px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.activity-item:last-child {
-  border-bottom: none;
-}
-
-.ticket-title {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.status.open {
-  color: #d97706;
-}
-
-.status.closed {
-  color: #2e7d32;
-}
-
-/* ===============================
-   SKELETON LOADING
-================================ */
-.skeleton-title {
-  width: 260px;
-  height: 34px;
-  background: #e5e7eb;
-  border-radius: 8px;
+/* SECTIONS */
+.detail-section h3 {
+  font-size: 20px;
+  font-weight: 700;
   margin-bottom: 10px;
-  animation: pulse 1.5s infinite;
 }
 
-.skeleton-subtitle {
-  width: 360px;
-  height: 16px;
-  background: #e5e7eb;
-  border-radius: 8px;
-  margin-bottom: 28px;
-  animation: pulse 1.5s infinite;
+.detail-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #374151;
 }
 
-.skeleton-card {
-  height: 96px;
-  background: #e5e7eb;
+/* ATTACHMENT */
+.attachment-card {
+  background: #f4f9fc;
+  padding: 20px;
+  border-radius: 16px;
+}
+
+.attachment-link {
+  font-weight: 700;
+  color: #3a7ca5;
+}
+
+/* HIGHLIGHT SECTIONS */
+.detail-section.highlight {
+  background: #f9fafb;
+  padding: 22px;
   border-radius: 18px;
-  animation: pulse 1.5s infinite;
+  border-left: 5px solid #4caf50;
 }
 
-.skeleton-block {
-  height: 180px;
-  background: #e5e7eb;
-  border-radius: 20px;
-  margin-bottom: 30px;
-  animation: pulse 1.5s infinite;
+/* FEEDBACK */
+.detail-section.feedback {
+  background: #fff;
+  padding: 22px;
+  border-radius: 18px;
+  border: 1px dashed rgba(58,124,165,0.3);
 }
 
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
+.rating {
+  font-size: 20px;
+  font-weight: 800;
+  color: #3a7ca5;
+}
+
+.comment {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #374151;
+}
+
+/* RIGHT */
+.detail-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.action-card {
+  background: #f4f9fc;
+  padding: 22px;
+  border-radius: 18px;
+  border: 1px solid #dbe7f3;
+}
+
+.action-card.highlight {
+  border-left: 4px solid #3a7ca5;
+}
+
+.assign-select {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid #cbd5e1;
+}
+
+.action-note {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #6b7280;
 }
 
 /* RESPONSIVE */
-@media (max-width: 1024px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+@media (max-width: 900px) {
+  .detail-layout {
+    grid-template-columns: 1fr;
   }
 }

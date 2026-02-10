@@ -1,47 +1,35 @@
 /* ===============================
-   ADMIN TICKET DETAILS (REDESIGN)
+   ADMIN TICKET DETAIL PAGE
 ================================ */
-
 .admin-ticket-detail-page {
   max-width: 1100px;
   margin: 0 auto;
   background: #ffffff;
-  padding: 36px;
-  border-radius: 24px;
-
-  border: 1px solid rgba(58, 124, 165, 0.18);
-  box-shadow:
-    0 14px 34px rgba(0, 0, 0, 0.08);
+  padding: 40px;
+  border-radius: 26px;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.12);
 }
 
-/* ===============================
-   TOP BAR
-================================ */
-.admin-detail-top {
+/* HEADER */
+.admin-detail-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
 }
 
 .back-btn {
-  background: none;
   border: none;
-  font-size: 14px;
+  background: none;
   font-weight: 600;
   color: #3a7ca5;
   cursor: pointer;
 }
 
-.back-btn:hover {
-  text-decoration: underline;
-}
-
 /* STATUS */
 .status-pill {
-  padding: 6px 14px;
+  padding: 8px 18px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
 }
 
@@ -55,107 +43,189 @@
   color: #2e7d32;
 }
 
-/* ===============================
-   TITLE
-================================ */
+/* TITLE */
 .detail-title {
-  font-size: 30px;
-  font-weight: 700;
+  margin: 20px 0 30px;
+  font-size: 32px;
+  font-weight: 800;
   color: #243447;
-  margin-bottom: 26px;
 }
 
-/* ===============================
-   META GRID
-================================ */
+/* META GRID */
 .detail-meta {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  margin-bottom: 36px;
+  margin-bottom: 40px;
 }
 
-.detail-meta div {
+.meta-card {
   background: #f9fbfd;
-  padding: 18px;
-  border-radius: 16px;
-  border: 1px solid rgba(58, 124, 165, 0.15);
+  padding: 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(58,124,165,0.15);
 }
 
-.detail-meta span {
+.meta-card span {
   font-size: 12px;
   font-weight: 700;
   color: #6b7280;
 }
 
-.detail-meta p {
+.meta-card p {
   margin-top: 6px;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   color: #243447;
 }
 
-.detail-meta small {
+.meta-card small {
   font-size: 12px;
   color: #6b7280;
 }
 
-/* ===============================
-   SECTIONS
-================================ */
+/* PRIORITY COLORS */
+.priority.low { color: #2e7d32; }
+.priority.medium { color: #92400e; }
+.priority.high { color: #b91c1c; }
+
+/* SECTIONS */
 .detail-section {
-  margin-top: 32px;
+  margin-top: 34px;
 }
 
 .detail-section h3 {
   font-size: 20px;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .detail-text {
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.7;
   color: #374151;
 }
 
-/* HIGHLIGHT BOX */
-.detail-section.highlight {
+/* ATTACHMENT */
+.attachment-box {
   background: #f4f9fc;
   padding: 22px;
   border-radius: 18px;
-  border-left: 4px solid #3a7ca5;
 }
 
-/* FEEDBACK */
-.detail-section.feedback {
+.attachment-link {
+  font-weight: 600;
+  color: #3a7ca5;
+}
+
+/* ASSIGN */
+.assign-box {
+  background: #eef6fb;
+  padding: 22px;
+  border-radius: 18px;
+  border-left: 5px solid #3a7ca5;
+}
+
+.assign-select {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid #cbd5e1;
+}
+
+/* RESOLUTION */
+.resolution-box {
   background: #f9fafb;
   padding: 22px;
   border-radius: 18px;
-  border: 1px dashed rgba(58, 124, 165, 0.3);
+  border-left: 5px solid #4caf50;
+}
+
+/* FEEDBACK */
+.feedback-box {
+  background: #fff;
+  padding: 22px;
+  border-radius: 18px;
+  border: 1px dashed rgba(58,124,165,0.3);
 }
 
 .rating {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 800;
   color: #3a7ca5;
-  margin-bottom: 6px;
 }
 
 .comment {
+  margin-top: 8px;
   font-size: 14px;
   color: #374151;
 }
 
-/* ===============================
-   RESPONSIVE
-================================ */
+/* RESPONSIVE */
 @media (max-width: 900px) {
   .detail-meta {
     grid-template-columns: 1fr;
   }
+}
+/* TWO COLUMN FIX */
+.detail-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  margin-top: 30px;
+}
 
-  .admin-ticket-detail-page {
-    padding: 26px;
+/* LEFT */
+.detail-left {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.info-grid div {
+  background: #f9fbfd;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid #e5edf5;
+}
+
+.info-grid span {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+/* RIGHT */
+.detail-right {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.action-card {
+  background: #f4f9fc;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #dbe7f3;
+}
+
+.action-card.highlight {
+  border-left: 4px solid #3a7ca5;
+}
+
+.action-card h4 {
+  margin-bottom: 10px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .detail-layout {
+    grid-template-columns: 1fr;
   }
 }

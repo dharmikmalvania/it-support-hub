@@ -9,7 +9,7 @@ const ticketSchema = mongoose.Schema(
     },
     assignedTo: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // technician
+      ref: "User", 
     },
 
     title: {
@@ -58,7 +58,7 @@ const ticketSchema = mongoose.Schema(
       },
     },
   ],
-  default: [], // 🔥 THIS FIXES EVERYTHING
+  default: [], 
 },
 
 

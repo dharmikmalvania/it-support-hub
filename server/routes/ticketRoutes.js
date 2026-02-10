@@ -28,9 +28,10 @@ router.get("/history", protect, getTicketHistory);
 ======================= */
 
 router.post("/", protect, upload.single("attachment"), createTicket);
-
 router.post("/:id/close-feedback", protect, closeTicketWithFeedback);
 router.put("/:id", protect, updateTicket);
+router.put("/:id",protect,upload.single("attachment"),updateTicket);
+
 router.post(
   "/tickets/:id/feedback",
   protect,

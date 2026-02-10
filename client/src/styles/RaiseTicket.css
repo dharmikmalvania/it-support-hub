@@ -5,31 +5,30 @@
   --c4: #eef1ff;
 }
 
-/* Page */
+/* PAGE */
 .ticket-form-page {
   min-height: 100vh;
   padding: 48px;
   background: linear-gradient(135deg, var(--c4), var(--c3));
 }
 
-/* Layout */
+/* LAYOUT */
 .ticket-layout {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
-  gap: 30px;
-  align-items: flex-start;
+  gap: 32px;
 }
 
 /* FORM CARD */
 .ticket-form-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  border-radius: 26px;
-  padding: 40px;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  border-radius: 28px;
+  padding: 42px;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.14);
 }
 
-/* Header */
+/* HEADER */
 .ticket-form-header h1 {
   font-size: 30px;
   font-weight: 700;
@@ -38,11 +37,11 @@
 
 .ticket-form-header p {
   margin-top: 6px;
-  margin-bottom: 26px;
+  margin-bottom: 28px;
   color: #666;
 }
 
-/* Form */
+/* FORM */
 .ticket-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -68,7 +67,6 @@
   color: #3b3e66;
 }
 
-/* Inputs */
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -88,7 +86,7 @@
   background: #fff;
 }
 
-/* Submit */
+/* SUBMIT */
 .submit-btn {
   grid-column: span 2;
   padding: 18px;
@@ -102,67 +100,113 @@
   display: flex;
   justify-content: center;
   gap: 10px;
+  transition: all 0.25s ease;
 }
 
 .submit-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.22);
+  transform: translateY(-2px);
+  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.25);
 }
 
-/* INFO CARD */
+.submit-btn.loading {
+  opacity: 0.85;
+  cursor: not-allowed;
+}
+
+/* SPINNER */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  border-top: 3px solid #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* RIGHT INFO CARD */
 .ticket-info-card {
   background: linear-gradient(135deg, var(--c1), var(--c2));
   color: #fff;
-  border-radius: 26px;
-  padding: 34px;
-  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.18);
+  border-radius: 28px;
+  padding: 36px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.22);
+  position: sticky;
+  top: 32px;
 }
 
 .ticket-info-card h3 {
+  font-size: 22px;
+  font-weight: 700;
   margin-bottom: 18px;
 }
 
-.ticket-info-card ul {
+.info-list {
   list-style: none;
   padding: 0;
 }
 
-.ticket-info-card li {
+.info-list li {
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+/* PRIORITY GUIDE */
+.priority-hint {
+  background: rgba(255, 255, 255, 0.25);
+  padding: 18px;
+  border-radius: 18px;
+  margin-top: 22px;
+}
+
+.priority-hint h4 {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+/* RESPONSE BOX */
+.response-box {
+  margin-top: 22px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* SUCCESS MODAL */
+.success-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  z-index: 999;
+}
+
+.success-modal {
+  background: linear-gradient(135deg, var(--c4), #fff);
+  padding: 40px;
+  border-radius: 26px;
+  text-align: center;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25);
+  animation: pop 0.35s ease;
+}
+
+.success-icon {
+  font-size: 60px;
+  color: #4caf50;
   margin-bottom: 14px;
 }
 
-/* Priority */
-.priority-hint {
-  margin-top: 22px;
-  background: rgba(255, 255, 255, 0.25);
-  padding: 16px;
-  border-radius: 16px;
-}
-/* Rating stars */
-.rating-stars {
-  display: flex;
-  gap: 10px;
-  font-size: 22px;
+@keyframes pop {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
-.star {
-  cursor: pointer;
-  color: #ccc;
-  transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.star.active {
-  color: #f4b400;
-}
-
-.star:hover {
-  transform: scale(1.15);
-}
-
-/* Responsive */
+/* RESPONSIVE */
 @media (max-width: 900px) {
   .ticket-layout {
     grid-template-columns: 1fr;
@@ -172,8 +216,92 @@
     grid-template-columns: 1fr;
   }
 
-  .form-group.full,
-  .submit-btn {
+  .submit-btn,
+  .form-group.full {
     grid-column: span 1;
   }
+
+  .ticket-info-card {
+    position: static;
+  }
+}
+/* EXISTING ATTACHMENT LINK (EDIT PAGE) */
+.view-attachment {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a4fdc;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+
+.view-attachment:hover {
+  color: #2d2f55;
+}
+
+/* EDIT MODE INFO CARD */
+
+
+/* Edit list */
+.ticket-info-card.edit-info .info-list li {
+  font-size: 14px;
+  /* color: #3b3e66; */
+}
+
+/* Edit note box */
+.edit-note {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  /* background: rgba(177, 178, 255, 0.25); */
+  font-size: 13px;
+  line-height: 1.6;
+}
+/* SAVE BUTTON DIFFERENCE (EDIT MODE) */
+.submit-btn.loading {
+  background: linear-gradient(135deg, #b1b2ff, #8e8fff);
+}
+
+/* ===============================
+   ATTACHMENT FIELD FIX
+================================ */
+
+/* Wrapper to make it look like ONE field */
+.attachment-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  padding: 12px;
+  border-radius: 16px;
+
+  background: var(--c4);
+  border: 1px solid var(--c3);
+
+  transition: all 0.3s ease;
+}
+
+/* Focus effect when file input is active */
+.attachment-box:focus-within {
+  background: #fff;
+  border-color: var(--c1);
+  box-shadow: 0 0 0 5px rgba(177, 178, 255, 0.3);
+}
+
+/* View attachment link */
+.view-attachment {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a4fdc;
+  text-decoration: underline;
+}
+
+/* File input reset so it doesn't break rounding */
+.attachment-box input[type="file"] {
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px dashed var(--c3);
+  background: rgba(255, 255, 255, 0.6);
 }

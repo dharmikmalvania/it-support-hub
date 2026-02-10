@@ -1,29 +1,35 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-  import {
+import {
   FaHeading,
   FaLayerGroup,
   FaFlag,
   FaPaperclip,
   FaAlignLeft,
   FaSave,
+  FaCheckCircle,
 } from "react-icons/fa";
-import "../../styles/raiseTicket.css"; // 👈 SAME CSS FILE
+
+import "../../styles/raiseTicket.css";
 
 const EditTicket = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [priority, setPriority] = useState("");
   const [description, setDescription] = useState("");
 
-  // ✅ LOAD TICKET (FROM STATE OR API)
+  const [attachment, setAttachment] = useState(null); // new file
+  const [existingAttachment, setExistingAttachment] = useState(null); // old file
+
+  const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  // ✅ LOAD TICKET
   useEffect(() => {
     if (location.state) {
       const ticket = location.state;
@@ -31,95 +37,94 @@ const EditTicket = () => {
       setCategory(ticket.category);
       setPriority(ticket.priority);
       setDescription(ticket.description);
+      setExistingAttachment(ticket.attachment || null);
     } else {
-      // If user refreshes page
       fetchTicket();
     }
   }, []);
 
   const fetchTicket = async () => {
-  try {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("Session expired. Please login again.");
-      navigate("/login");
-      return;
-    }
-
-    const res = await axios.get(
-      `http://localhost:5000/api/tickets/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+        return;
       }
-    );
 
-    setTitle(res.data.title);
-    setCategory(res.data.category);
-    setPriority(res.data.priority);
-    setDescription(res.data.description);
+      const res = await axios.get(
+        `http://localhost:5000/api/tickets/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-  } catch (error) {
-    console.error("FETCH TICKET ERROR:", error);
-    alert("Failed to load ticket details.");
-    navigate("/user/my-tickets");
-  }
-};
-
+      setTitle(res.data.title);
+      setCategory(res.data.category);
+      setPriority(res.data.priority);
+      setDescription(res.data.description);
+      setExistingAttachment(res.data.attachment || null);
+    } catch (error) {
+      console.error("FETCH TICKET ERROR:", error);
+      alert("Failed to load ticket details");
+      navigate("/user/my-tickets");
+    }
+  };
 
   // ✅ UPDATE TICKET
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
 
-    if (!token) {
-      alert("Session expired. Please login again.");
-      navigate("/login");
-      return;
-    }
+      setLoading(true);
 
-    await axios.put(
-      `http://localhost:5000/api/tickets/${id}`,
-      {
-        title,
-        category,
-        priority,
-        description,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // ✅ FIX
-          "Content-Type": "application/json",
-        },
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("category", category);
+      formData.append("priority", priority);
+      formData.append("description", description);
+
+      if (attachment) {
+        formData.append("attachment", attachment);
       }
-    );
 
-    alert("Ticket updated successfully");
-    navigate("/user/my-tickets");
+      await axios.put(
+        `http://localhost:5000/api/tickets/${id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-  } catch (error) {
-    console.error("UPDATE TICKET ERROR:", error.response?.data || error);
-    alert(
-      error.response?.data?.message ||
-      "Failed to update ticket"
-    );
-  }
-};
+      setShowSuccess(true);
 
+      setTimeout(() => {
+        navigate("/user/my-tickets");
+      }, 2000);
+    } catch (error) {
+      console.error("UPDATE TICKET ERROR:", error);
+      alert(
+        error.response?.data?.message ||
+        "Failed to update ticket"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
-
-
-return (
+  return (
   <div className="user-layout">
     <main className="main-content">
       <div className="ticket-form-page">
         <div className="ticket-layout">
 
-          {/* LEFT – FORM */}
+          {/* LEFT – FORM CARD */}
           <div className="ticket-form-card">
             <div className="ticket-form-header">
               <h1>Edit Ticket</h1>
@@ -127,7 +132,7 @@ return (
             </div>
 
             <form className="ticket-form" onSubmit={handleSubmit}>
-              {/* Title */}
+              {/* Ticket Title */}
               <div className="form-group">
                 <label>
                   <FaHeading /> Ticket Title
@@ -173,15 +178,30 @@ return (
               </div>
 
               {/* Attachment */}
-              <div className="form-group">
-                <label>
-                  <FaPaperclip /> Attachment
-                </label>
-                <input
-                  type="file"
-                  onChange={(e) => setAttachment(e.target.files[0])}
-                />
-              </div>
+             <div className="form-group">
+  <label>
+    <FaPaperclip /> Attachment
+  </label>
+
+  <div className="attachment-box">
+    {existingAttachment && (
+      <a
+        className="view-attachment"
+        href={`http://localhost:5000/uploads/${existingAttachment}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        View current attachment
+      </a>
+    )}
+
+    <input
+      type="file"
+      onChange={(e) => setAttachment(e.target.files[0])}
+    />
+  </div>
+</div>
+
 
               {/* Description */}
               <div className="form-group full">
@@ -196,34 +216,59 @@ return (
               </div>
 
               {/* Submit */}
-              <button type="submit" className="submit-btn">
-                <FaSave /> Save Changes
+              <button
+                type="submit"
+                className={`submit-btn ${loading ? "loading" : ""}`}
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="spinner" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <FaSave /> Save Changes
+                  </>
+                )}
               </button>
             </form>
           </div>
 
-          {/* RIGHT – INFO PANEL (reused layout) */}
-          <div className="ticket-info-card">
-            <h3>Editing Tips ✏️</h3>
+          {/* RIGHT – INFO CARD */}
+         
+<div className="ticket-info-card edit-info">
+  <h3>✏️ Editing This Ticket</h3>
 
-            <ul>
-              <li>Update the title to reflect the issue clearly</li>
-              <li>Change priority if urgency has changed</li>
-              <li>Add more details if the issue evolved</li>
-              <li>Attach new screenshots if needed</li>
-            </ul>
+  <ul className="info-list">
+    <li>✔ Review details carefully before saving</li>
+    <li>✔ Update priority if urgency has changed</li>
+    <li>✔ Replace attachment only if necessary</li>
+    <li>✔ Changes notify the support team instantly</li>
+  </ul>
 
-            <div className="priority-hint">
-              <span>Reminder</span>
-              <p>
-                After saving, support will be notified of updates.
-              </p>
-            </div>
-          </div>
+  <div className="edit-note">
+    <p>
+      💡 Tip: Clear updates help technicians resolve your issue faster.
+    </p>
+  </div>
+</div>
+
 
         </div>
       </div>
     </main>
+
+    {/* SUCCESS MODAL */}
+    {showSuccess && (
+      <div className="success-overlay">
+        <div className="success-modal">
+          <FaCheckCircle className="success-icon" />
+          <h2>Ticket Updated!</h2>
+          <p>Your changes have been saved successfully ✅</p>
+        </div>
+      </div>
+    )}
   </div>
 );
 

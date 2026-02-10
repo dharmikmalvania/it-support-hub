@@ -28,47 +28,32 @@ export const createTicket = async (req, res) => {
   try {
     const { title, category, priority, description } = req.body;
 
+    // ✅ get uploaded file name
+    const attachment = req.file ? req.file.filename : null;
+
     const ticket = await Ticket.create({
       user: req.user.id,
       title,
       category,
       priority,
       description,
+      attachment,
     });
 
-    // 🔹 get user email
-    const user = await User.findById(req.user.id);
-
-    // 🔹 send email
-    await sendEmail(
-  user.email,
-  "Ticket Created - IT Support Hub",
-  ticketCreatedTemplate({
-    name: user.name,
-    title: ticket.title,
-    category: ticket.category,
-    priority: ticket.priority,
-    description: ticket.description,
-    status: ticket.status,
-    ticketId: ticket._id.toString().slice(-6),
-  })
-);
-
-
-    
-
-      await createNotification(
-      req.user.id,
-        "🎫 Your ticket has been created successfully"
-    );
-
-
-    res.status(201).json(ticket);
+    res.status(201).json({
+      success: true,
+      message: "Ticket created successfully",
+      ticket,
+    });
   } catch (error) {
     console.error("CREATE TICKET ERROR:", error);
-    res.status(500).json({ message: "Failed to create ticket" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to create ticket",
+    });
   }
 };
+
 
 /* =========================
    GET USER TICKETS
@@ -103,25 +88,35 @@ export const getTicketById = async (req, res) => {
    UPDATE TICKET
 ========================= */
 export const updateTicket = async (req, res) => {
-  const ticket = await Ticket.findById(req.params.id);
+  try {
+    const ticket = await Ticket.findById(req.params.id);
 
-  if (!ticket) {
-    return res.status(404).json({ message: "Ticket not found" });
+    if (!ticket) {
+      return res.status(404).json({ message: "Ticket not found" });
+    }
+
+    if (ticket.status === "Closed") {
+      return res
+        .status(400)
+        .json({ message: "Closed tickets cannot be edited" });
+    }
+
+    ticket.title = req.body.title || ticket.title;
+    ticket.category = req.body.category || ticket.category;
+    ticket.priority = req.body.priority || ticket.priority;
+    ticket.description = req.body.description || ticket.description;
+
+    // ✅ HANDLE NEW ATTACHMENT
+    if (req.file) {
+      ticket.attachment = req.file.filename;
+    }
+
+    const updatedTicket = await ticket.save();
+    res.json(updatedTicket);
+  } catch (error) {
+    console.error("UPDATE TICKET ERROR:", error);
+    res.status(500).json({ message: "Failed to update ticket" });
   }
-
-  if (ticket.status === "Closed") {
-    return res
-      .status(400)
-      .json({ message: "Closed tickets cannot be edited" });
-  }
-
-  ticket.title = req.body.title || ticket.title;
-  ticket.category = req.body.category || ticket.category;
-  ticket.priority = req.body.priority || ticket.priority;
-  ticket.description = req.body.description || ticket.description;
-
-  const updatedTicket = await ticket.save();
-  res.json(updatedTicket);
 };
 
 /* =========================

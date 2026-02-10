@@ -1,0 +1,29 @@
+:root {
+  --c1: #B1B2FF;
+  --c2: #AAC4FF;
+  --c3: #D2DAFF;
+  --c4: #EEF1FF;
+}
+
+/* Layout wrapper */
+.user-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+
+/* Main content */
+.user-content {
+  margin-left: 70px;
+  padding: 24px;
+  min-height: 100vh;
+  background: var(--c4);
+  transition: margin-left 0.35s ease;
+  width: 100%;
+}
+
+/* Sidebar hover effect */
+.sidebar:hover ~ .user-content {
+  margin-left: 240px;
+}
