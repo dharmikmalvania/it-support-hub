@@ -1,126 +1,188 @@
-/* ===============================
-   LAYOUT
-================================ */
+/* =========================================
+   TECH LAYOUT
+========================================= */
+
 .tech-layout {
   display: flex;
   min-height: 100vh;
-  background: #F6F4EB;
+  background: linear-gradient(135deg, #F6F4EB, #e9f0f5);
 }
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
 
 .tech-main {
   flex: 1;
-  margin-left: 72px;
-  padding: 36px;
-  background: linear-gradient(180deg, #F6F4EB, #EEF3F7);
-  color: #243447;
+  margin-left: 78px;
+  padding: 40px 50px;
 }
 
-/* ===============================
-   SIDEBAR
-================================ */
+/* =========================================
+   TECH SIDEBAR STRUCTURE FIX
+========================================= */
+
 .tech-sidebar {
-  width: 72px;
+  width: 78px;
   height: 100vh;
   position: fixed;
-  left: 0;
   top: 0;
+  left: 0;
 
-  background: linear-gradient(180deg, #91C8E4, #F6F4EB);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 14px 0;
 
-  box-shadow: 4px 0 18px rgba(0, 0, 0, 0.08);
+  padding: 22px 0;
+
+  background: linear-gradient(180deg, #4682A9, #749BC2);
+  box-shadow: 8px 0 35px rgba(0,0,0,0.15);
+  z-index: 1000;
 }
 
 /* LOGO */
 .tech-sidebar-logo {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  background: #4682A9;
-  color: #fff;
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  margin-bottom: 26px;
-}
 
-/* MENU */
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+
+  margin-bottom: 40px;  /* 👈 space below logo */
+
+  background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.08));
+  backdrop-filter: blur(6px);
+
+  box-shadow:
+    inset 0 2px 4px rgba(255,255,255,0.35),
+    0 10px 25px rgba(0,0,0,0.25);
+}
+/* =========================================
+   MENU
+========================================= */
+
 .tech-sidebar-menu {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
+
+  width: 100%;
+  align-items: center;
+
+  flex: 1;           /* 👈 push logout down */
 }
 
-/* ITEM */
+/* =========================================
+   MENU ITEM
+========================================= */
+
 .tech-side-item {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
+  width: 50px;
+  height: 50px;
+  border-radius: 18px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  color: #243447;
-  font-size: 18px;
+  font-size: 19px;
+  color: rgba(255,255,255,0.85);
+
   position: relative;
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
 }
 
-.tech-side-item svg {
-  font-size: 20px;
-}
-
-/* HOVER */
+/* Hover */
 .tech-side-item:hover {
-  background: rgba(70, 130, 169, 0.15);
-  color: #4682A9;
-  transform: translateX(3px);
+  background: rgba(255,255,255,0.18);
+  transform: translateX(5px) scale(1.05);
+  color: #ffffff;
 }
 
-/* ACTIVE */
+/* Active */
 .tech-side-item.active {
-  background: #4682A9;
-  color: #fff;
-  box-shadow: 0 8px 18px rgba(70, 130, 169, 0.4);
+  background: #ffffff;
+  color: #4682A9;
+
+  box-shadow:
+    0 14px 28px rgba(0,0,0,0.25),
+    inset 0 -3px 6px rgba(0,0,0,0.08);
 }
 
+/* Active left indicator */
 .tech-side-item.active::before {
   content: "";
   position: absolute;
-  left: -14px;
-  width: 5px;
-  height: 26px;
-  background: #4682A9;
+  left: -18px;
+  width: 6px;
+  height: 32px;
   border-radius: 6px;
+  background: #ffffff;
 }
 
-/* TOOLTIP */
+/* =========================================
+   TOOLTIP
+========================================= */
+
 .tech-side-item::after {
   content: attr(data-label);
   position: absolute;
-  left: 62px;
+  left: 75px;
 
-  background: #4682A9;
-  color: #fff;
+  background: #1f2937;
+  color: #ffffff;
 
   padding: 6px 12px;
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 12px;
+  white-space: nowrap;
 
   opacity: 0;
-  transform: translateX(-6px);
+  transform: translateX(-10px);
   transition: all 0.25s ease;
-  white-space: nowrap;
   pointer-events: none;
+
+  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
 }
 
 .tech-side-item:hover::after {
   opacity: 1;
   transform: translateX(0);
+}
+
+/* =========================================
+   LOGOUT SECTION
+========================================= */
+
+.tech-sidebar-bottom {
+  margin-bottom: 50px;   /* 👈 bottom spacing */
+}
+
+.tech-side-item.logout {
+  color: #ffecec;
+}
+
+.tech-side-item.logout:hover {
+  background: rgba(255, 0, 0, 0.18);
+  color: #ffffff;
+  transform: translateX(5px) scale(1.05);
+}
+
+/* =========================================
+   SCROLLBAR FIX (OPTIONAL)
+========================================= */
+
+.tech-main::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tech-main::-webkit-scrollbar-thumb {
+  background: rgba(70,130,169,0.4);
+  border-radius: 10px;
 }

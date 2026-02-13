@@ -1,144 +1,177 @@
 /* ===============================
-   ROOT THEME
+   AUTH WRAPPER
 ================================ */
-:root {
-  --primary: #6366f1;
-  --primary-soft: #eef2ff;
-  --text-dark: #111827;
-  --text-muted: #6b7280;
-  --border: #e5e7eb;
-  --danger: #ef4444;
-  --success: #22c55e;
-  --bg-gradient: linear-gradient(135deg, #eef2ff, #f8fafc);
-}
 
-/* ===============================
-   PAGE WRAPPER
-================================ */
 .auth-wrapper {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-gradient);
-  padding: 20px;
+
+  background: linear-gradient(135deg, #F6F4EB 0%, #E3F2FD 40%, #D6EAF8 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated gradient glow */
+.auth-wrapper::before,
+.auth-wrapper::after {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  z-index: 0;
+  filter: blur(100px);
+  opacity: 0.5;
+}
+
+.auth-wrapper::before {
+  background: #91C8E4;
+  top: -150px;
+  left: -150px;
+}
+
+.auth-wrapper::after {
+  background: #749BC2;
+  bottom: -150px;
+  right: -150px;
 }
 
 /* ===============================
-   CARD
+   AUTH CARD
 ================================ */
+
 .auth-card {
-  width: 100%;
-  max-width: 430px;
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 36px 34px 40px;
+  position: relative;
+  z-index: 2;
+  width: 460px;
+  padding: 55px 45px;
+  border-radius: 32px;
+
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(25px);
+
+  border: 1px solid rgba(145, 200, 228, 0.4);
+
   box-shadow:
-    0 30px 60px rgba(0, 0, 0, 0.08),
-    0 10px 25px rgba(0, 0, 0, 0.06);
-  animation: fadeUp 0.6s ease;
+    0 40px 90px rgba(0,0,0,0.15),
+    0 15px 40px rgba(70,130,169,0.2);
+
+  animation: floatUp 0.6s ease;
 }
 
-/* ===============================
-   HEADER
-================================ */
+@keyframes floatUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* HEADER */
 .auth-header {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 30px;
 }
 
-.auth-header h2 {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--text-dark);
-  margin-bottom: 6px;
+.auth-card h2 {
+  font-size: 30px;
+  font-weight: 900;
+  background: linear-gradient(90deg, #4682A9, #749BC2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.auth-header p {
+.auth-header p,
+.sub-text {
   font-size: 14px;
-  color: var(--text-muted);
+  color: #6b7280;
 }
 
 /* ===============================
    ERROR
 ================================ */
+
 .auth-error {
-  background: #fee2e2;
-  color: var(--danger);
+  background: linear-gradient(135deg, #ffe5e5, #ffd6d6);
+  color: #b91c1c;
+  padding: 14px;
+  border-radius: 18px;
   font-size: 14px;
-  padding: 10px 12px;
-  border-radius: 10px;
+  margin-bottom: 22px;
   text-align: center;
-  margin-bottom: 16px;
+  font-weight: 600;
+  border: 1px solid #f8caca;
 }
 
 /* ===============================
    FORM
 ================================ */
+
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
-/* ===============================
-   INPUTS
-================================ */
+/* INPUTS */
 .auth-form input,
 .otp-input {
   width: 100%;
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1.5px solid var(--border);
-  font-size: 14px;
-  outline: none;
-  transition: all 0.25s ease;
+  padding: 18px;
+  border-radius: 24px;
+  border: 1px solid #dbe7f3;
+  font-size: 15px;
+
+  background: linear-gradient(135deg, #f9fbfd, #ffffff);
+  transition: all 0.3s ease;
 }
 
-.auth-form input::placeholder,
-.otp-input::placeholder {
-  color: var(--text-muted);
+.auth-form input:hover {
+  border-color: #91C8E4;
 }
 
 .auth-form input:focus,
 .otp-input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+  outline: none;
+  border-color: #4682A9;
+  box-shadow:
+    0 0 0 4px rgba(70,130,169,0.25),
+    0 6px 20px rgba(70,130,169,0.15);
+  transform: translateY(-2px);
 }
 
-/* ===============================
-   OTP SPECIAL
-================================ */
-.auth-group {
-  margin: 10px 0 6px;
-}
-
+/* OTP */
 .otp-input {
   text-align: center;
-  font-size: 20px;
-  letter-spacing: 6px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 10px;
+  background: linear-gradient(135deg, #eef6ff, #ffffff);
 }
 
 /* ===============================
    BUTTON
 ================================ */
+
 .auth-btn {
-  margin-top: 10px;
-  padding: 14px;
-  border-radius: 14px;
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 28px;
   border: none;
-  background: linear-gradient(135deg, #6366f1, #818cf8);
+  font-size: 17px;
+  font-weight: 800;
+
+  background: linear-gradient(135deg, #4682A9, #749BC2, #91C8E4);
+  background-size: 200% 200%;
   color: #ffffff;
-  font-size: 15px;
-  font-weight: 600;
+
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.35s ease;
 }
 
-.auth-btn:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 25px rgba(99, 102, 241, 0.35);
+.auth-btn:hover {
+  background-position: right center;
+  transform: translateY(-4px);
+  box-shadow: 0 20px 45px rgba(70,130,169,0.4);
 }
 
 .auth-btn:active {
@@ -153,18 +186,21 @@
 /* ===============================
    FOOTER LINKS
 ================================ */
+
 .auth-footer,
 .auth-link {
-  margin-top: 18px;
+  margin-top: 20px;
   text-align: center;
   font-size: 14px;
-  color: var(--text-muted);
+  color: #6b7280;
 }
 
 .auth-footer a,
 .auth-link a {
-  color: var(--primary);
-  font-weight: 600;
+  font-weight: 800;
+  background: linear-gradient(90deg, #4682A9, #749BC2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-decoration: none;
 }
 
@@ -174,38 +210,12 @@
 }
 
 /* ===============================
-   SUB TEXT (OTP)
+   RESPONSIVE
 ================================ */
-.sub-text {
-  text-align: center;
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-bottom: 18px;
-}
 
-/* ===============================
-   ANIMATION
-================================ */
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ===============================
-   MOBILE
-================================ */
-@media (max-width: 480px) {
+@media (max-width: 500px) {
   .auth-card {
-    padding: 28px 24px 32px;
-  }
-
-  .auth-header h2 {
-    font-size: 22px;
+    width: 92%;
+    padding: 40px 28px;
   }
 }

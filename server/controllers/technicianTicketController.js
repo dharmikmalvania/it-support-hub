@@ -1,11 +1,8 @@
 import Ticket from "../models/Ticket.js";
+import User from "../models/User.js";
+import notifyUser from "../utils/notify.js";
 
 
-/**
- * @desc    Get all tickets assigned to logged-in technician
- * @route   GET /api/technician/tickets
- * @access  Technician (Protected)
- */
 export const getMyTickets = async (req, res) => {
   try { 
     const technicianId = req.user._id;
@@ -25,11 +22,6 @@ export const getMyTickets = async (req, res) => {
   }
 };
 
-/**
- * @desc    Get single ticket details (technician)
- * @route   GET /api/technician/tickets/:id
- * @access  Technician (Protected)
- */
 export const getTicketDetails = async (req, res) => {
   try {
     const ticket = await Ticket.findOne({
@@ -47,17 +39,11 @@ export const getTicketDetails = async (req, res) => {
   }
 };
 
-
-/**
- * @desc    Update ticket status (Open → Closed)
- * @route   PATCH /api/technician/tickets/:id/status
- * @access  Technician (Protected)
- */
 export const updateTicketStatus = async (req, res) => {
   try {
     const { status } = req.body;
 
-    if (!["Open", "Closed"].includes(status)) {
+    if (!["Open", "In Progress", "Waiting for User", "Closed"].includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
     }
 
@@ -73,59 +59,120 @@ export const updateTicketStatus = async (req, res) => {
     ticket.status = status;
     await ticket.save();
 
+    const user = await User.findById(ticket.user);
+
+    await notifyUser(
+      user,
+      "Ticket Status Updated - IT Support Hub",
+      "🔄 Ticket Status Updated",
+      `
+        <p><strong>Ticket ID:</strong> ${ticket._id}</p>
+        <p><strong>Title:</strong> ${ticket.title}</p>
+        <p><strong>Status:</strong> 
+          <span style="color:green;">${ticket.status}</span>
+        </p>
+      `
+    );
+
     res.json({ message: "Ticket status updated", ticket });
+
   } catch (error) {
+    console.error("STATUS UPDATE ERROR:", error);
     res.status(500).json({ message: "Status update failed" });
   }
 };
 
 export const startTicketWork = async (req, res) => {
-  const ticket = await Ticket.findOne({
-    _id: req.params.id,
-    assignedTo: req.user._id,
-  });
+  try {
+    const ticket = await Ticket.findOne({
+      _id: req.params.id,
+      assignedTo: req.user._id,
+    });
 
-  if (!ticket) return res.status(404).json({ message: "Ticket not found" });
+    if (!ticket) {
+      return res.status(404).json({ message: "Ticket not found" });
+    }
 
-  ticket.status = "In Progress";
-  ticket.startedAt = new Date();
-  ticket.workLog.push({
-    message: "Technician started working on the issue",
-    by: req.user._id,
-  });
+    ticket.status = "In Progress";
+    ticket.startedAt = new Date();
 
-  await ticket.save();
-  res.json(ticket);
+    ticket.workLog.push({
+      message: "Technician started working on the issue",
+      by: req.user._id,
+    });
+
+    await ticket.save();
+
+    const user = await User.findById(ticket.user);
+
+    await notifyUser(
+      user,
+      "Work Started - IT Support Hub",
+      "🚀 Technician Started Working",
+      `
+        <p>Your ticket is now in progress.</p>
+        <p><strong>Ticket ID:</strong> ${ticket._id}</p>
+        <p><strong>Title:</strong> ${ticket.title}</p>
+      `
+    );
+
+    res.json(ticket);
+
+  } catch (error) {
+    console.error("START WORK ERROR:", error);
+    res.status(500).json({ message: "Failed to start work" });
+  }
 };
-
 
 export const closeTicket = async (req, res) => {
-  const { summary, rootCause } = req.body;
+  try {
+    const { summary, rootCause } = req.body;
 
-  const ticket = await Ticket.findOne({
-    _id: req.params.id,
-    assignedTo: req.user._id,
-  });
+    const ticket = await Ticket.findOne({
+      _id: req.params.id,
+      assignedTo: req.user._id,
+    });
 
-  if (!ticket) return res.status(404).json({ message: "Ticket not found" });
+    if (!ticket) {
+      return res.status(404).json({ message: "Ticket not found" });
+    }
 
-  ticket.status = "Closed";
-  ticket.closedAt = new Date();
-  ticket.resolution = {
-    summary,
-    rootCause,
-    fixedAt: new Date(),
-  };
+    ticket.status = "Closed";
+    ticket.closedAt = new Date();
+    ticket.resolution = {
+      summary,
+      rootCause,
+      fixedAt: new Date(),
+    };
 
-  ticket.workLog.push({
-    message: "Ticket closed with resolution",
-    by: req.user._id,
-  });
+    ticket.workLog.push({
+      message: "Ticket closed with resolution",
+      by: req.user._id,
+    });
 
-  await ticket.save();
-  res.json(ticket);
+    await ticket.save();
+
+    const user = await User.findById(ticket.user);
+
+    await notifyUser(
+      user,
+      "Ticket Resolved - IT Support Hub",
+      "✅ Ticket Resolved",
+      `
+        <p>Your issue has been resolved successfully.</p>
+        <p><strong>Ticket ID:</strong> ${ticket._id}</p>
+        <p><strong>Title:</strong> ${ticket.title}</p>
+        <p>Please log in and provide feedback.</p>
+      `
+    );
+
+    res.json(ticket);
+
+  } catch (error) {
+    console.error("CLOSE TICKET ERROR:", error);
+    res.status(500).json({ message: "Failed to close ticket" });
+  }
 };
-
 
 export const addWorkLog = async (req, res) => {
   const { message } = req.body;

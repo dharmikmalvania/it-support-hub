@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   FaHome,
   FaTicketAlt,
@@ -6,65 +6,83 @@ import {
   FaChartLine,
   FaSignOutAlt
 } from "react-icons/fa";
-import "../layouts/technicianLayout.css";
+import { useState } from "react";
 
 const TechnicianSidebar = () => {
-  const handleLogout = () => {
-    localStorage.clear();
-    window.location.href = "/login";
+  const navigate = useNavigate();
+  const [showLogout, setShowLogout] = useState(false);
+
+  const confirmLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login", { replace: true });
   };
 
   return (
-    <aside className="tech-sidebar">
-      {/* LOGO */}
-      <div className="tech-sidebar-logo">🧑‍🔧</div>
+    <>
+      <aside className="tech-sidebar">
+        <div className="tech-sidebar-logo">
+  IT
+</div>
 
-      {/* MENU */}
-      <nav className="tech-sidebar-menu">
-        <NavLink
-          to="/technician/dashboard"
-          className="tech-side-item"
-          data-label="Dashboard"
-        >
-          <FaHome />
-        </NavLink>
 
-        <NavLink
-          to="/technician/tickets/active"
-          className="tech-side-item"
-          data-label="Active Tickets"
-        >
-          <FaTicketAlt />
-        </NavLink>
+        <nav className="tech-sidebar-menu">
+          <NavLink to="/technician/dashboard" className="tech-side-item" data-label="Dashboard">
+            <FaHome />
+          </NavLink>
 
-        <NavLink
-          to="/technician/tickets/closed"
-          className="tech-side-item"
-          data-label="Closed Tickets"
-        >
-          <FaCheckCircle />
-        </NavLink>
+          <NavLink to="/technician/tickets/active" className="tech-side-item" data-label="Active Tickets">
+            <FaTicketAlt />
+          </NavLink>
 
-        <NavLink
-          to="/technician/performance"
-          className="tech-side-item"
-          data-label="Performance"
-        >
-          <FaChartLine />
-        </NavLink>
-      </nav>
+          <NavLink to="/technician/tickets/closed" className="tech-side-item" data-label="Closed Tickets">
+            <FaCheckCircle />
+          </NavLink>
 
-      {/* LOGOUT */}
-      <div className="tech-sidebar-bottom">
-        <button
-          className="tech-side-item logout"
-          data-label="Logout"
-          onClick={handleLogout}
-        >
-          <FaSignOutAlt />
-        </button>
-      </div>
-    </aside>
+          <NavLink to="/technician/performance" className="tech-side-item" data-label="Performance">
+            <FaChartLine />
+          </NavLink>
+        </nav>
+
+        <div className="tech-sidebar-bottom">
+          <button
+            className="tech-side-item logout"
+            data-label="Logout"
+            onClick={() => setShowLogout(true)}
+          >
+            <FaSignOutAlt />
+          </button>
+        </div>
+      </aside>
+
+      {/* LOGOUT MODAL */}
+      {showLogout && (
+        <div className="logout-overlay">
+          <div className="logout-modal">
+            <h3>Confirm Logout</h3>
+            <p>
+              Are you sure you want to logout from Technician Panel?
+            </p>
+
+            <div className="logout-actions">
+              <button
+                className="cancel-btn"
+                onClick={() => setShowLogout(false)}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="confirm-btn"
+                onClick={confirmLogout}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

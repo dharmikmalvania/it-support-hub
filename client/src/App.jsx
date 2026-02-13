@@ -87,15 +87,9 @@ const App = () => {
               {/* <Route path="tickets" element={<TechnicianTickets />} /> */}
               <Route path="tickets/:id" element={<TicketDetails />} />
               <Route path="performance" element={<TechnicianPerformance />} />
-<Route
-  path="/technician/tickets/active"
-  element={<ActiveTickets />}
-/>
+<Route path="tickets/active" element={<ActiveTickets />} />
+<Route path="tickets/closed" element={<ClosedTickets />} />
 
-<Route
-  path="/technician/tickets/closed"
-  element={<ClosedTickets />}
-/>
 
             </Route>
           </Route>

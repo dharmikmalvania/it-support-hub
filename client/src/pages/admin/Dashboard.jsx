@@ -67,6 +67,14 @@ const AdminDashboard = () => {
           System overview & performance analytics
         </p>
       </div>
+      <div className="admin-system-status">
+  <div className="status-indicator"></div>
+  <div>
+    <h4>System Status: Operational</h4>
+    <p>All services running normally. No critical incidents reported.</p>
+  </div>
+</div>
+
 
       {/* QUICK INSIGHT STRIP (STATIC) */}
       <div className="admin-insight">
@@ -76,6 +84,24 @@ const AdminDashboard = () => {
         </p>
       </div>
 
+      <div className="admin-metrics-bar">
+  <div className="metric-box">
+    <span>🚀 Efficiency</span>
+    <strong>92%</strong>
+  </div>
+
+  <div className="metric-box">
+    <span>⚡ Avg Response</span>
+    <strong>1.8 hrs</strong>
+  </div>
+
+  <div className="metric-box">
+    <span>⭐ Satisfaction</span>
+    <strong>4.9 / 5</strong>
+  </div>
+</div>
+
+
       {/* ===== STAT CARDS ===== */}
       <div className="stats-grid">
         <StatCard title="Users" value={overview.totalUsers} />
@@ -84,6 +110,26 @@ const AdminDashboard = () => {
         <StatCard title="Open Tickets" value={overview.openTickets} />
         <StatCard title="Closed Tickets" value={overview.closedTickets} />
       </div>
+
+      <div className="admin-actions">
+  <h3>Quick Actions</h3>
+
+  <div className="action-buttons">
+    <button className="action-btn primary">
+      ➕ Add Technician
+    </button>
+
+    <button className="action-btn secondary">
+      📄 View Reports
+    </button>
+
+    <button className="action-btn danger">
+      ⚠️ Review Open Tickets
+    </button>
+  </div>
+</div>
+
+
 
       {/* ===== TECH PERFORMANCE ===== */}
       <div className="section">

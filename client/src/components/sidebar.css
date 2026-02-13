@@ -4,25 +4,24 @@
     --sb-hover: rgba(177, 178, 255, 0.15);
     --sb-text: #2d2f55;
   }
+.side-item:empty {
+  display: none;
+}
 
   /* SIDEBAR */
   .sidebar {
-    width: 74px;
-    height: 100vh;
+  width: 74px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
 
-    position: fixed;      /* 🔥 KEY FIX */
-    top: 0;
-    left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    background: linear-gradient(180deg, #eef1ff, #e6ebff);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 16px 0;
-
-    box-shadow: 6px 0 25px rgba(0, 0, 0, 0.08);
-    z-index: 1000;
-  }
+  padding: 16px 0;
+}
   /* LOGO */
   .sidebar-logo {
     width: 44px;
@@ -39,12 +38,12 @@
   }
 
   /* MENU */
-  .sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    flex: 1;
-  }
+ .sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
 
   /* ITEM */
   .side-item {
@@ -85,49 +84,204 @@
   }
 
   /* TOOLTIP */
-  .side-item::after {
-    content: attr(data-label);
-    position: absolute;
-    left: 64px;
-    background: #2d2f55;
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateX(-6px);
-    transition: all 0.25s ease;
-    pointer-events: none;
-  }
+.side-item {
+  position: relative;
+}
 
-  .side-item:hover::after {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.side-item::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 65px;
+  background: #243447;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.25s ease;
+  pointer-events: none;
+}
 
-  /* BOTTOM */
-  .sidebar-bottom {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    align-items: center;
-  }
+.side-item:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* BOTTOM SECTION */
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+
+  margin-bottom: 50px; /* 🔥 THIS FIXES YOUR PROBLEM */
+}
 
   /* PROFILE PIC */
-  .profile-pic {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--sb-active);
-  }
+ .profile-pic {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--sb-active);
+  margin-bottom: 4px;
+}
 
-  /* LOGOUT */
-  .logout {
-    color: #e74c3c;
-  }
 
-  .logout:hover {
-    background: rgba(231, 76, 60, 0.15);
+  /* ===========================
+   LOGOUT MODAL OVERLAY
+=========================== */
+.logout-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 30, 50, 0.45);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.25s ease;
+}
+
+/* ===========================
+   MODAL CARD
+=========================== */
+.logout-modal {
+  width: 380px;
+  background: linear-gradient(145deg, #ffffff, #f7f9fc);
+  border-radius: 22px;
+  padding: 35px 30px;
+  text-align: center;
+  box-shadow:
+    0 25px 60px rgba(0,0,0,0.25),
+    0 5px 20px rgba(0,0,0,0.08);
+  animation: slideUp 0.3s ease;
+  position: relative;
+}
+
+/* ICON */
+.logout-icon {
+  font-size: 50px;
+  margin-bottom: 15px;
+  animation: pulse 1.8s infinite;
+}
+
+/* TITLE */
+.logout-modal h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #243447;
+}
+
+/* TEXT */
+.logout-modal p {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+/* BUTTON CONTAINER */
+.logout-actions {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+
+/* ===============================
+   CANCEL BUTTON (Soft Glass)
+================================ */
+
+.cancel-btn {
+  padding: 12px 22px;
+  border-radius: 16px;
+  border: 1px solid rgba(203, 213, 225, 0.6);
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  color: #374151;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.cancel-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #eef2f7, #dbe4f0);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+}
+
+.cancel-btn:active {
+  transform: scale(0.96);
+}
+
+/* ===============================
+   CONFIRM BUTTON (Premium Danger)
+================================ */
+
+.confirm-btn {
+  padding: 12px 22px;
+  border-radius: 16px;
+  border: none;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #ff6b6b, #ef4444, #dc2626);
+  background-size: 200% 200%;
+  color: #ffffff;
+
+  transition: all 0.35s ease;
+
+  box-shadow:
+    0 8px 18px rgba(239, 68, 68, 0.35),
+    inset 0 -3px 6px rgba(0,0,0,0.15);
+}
+
+.confirm-btn:hover {
+  background-position: right center;
+  transform: translateY(-3px);
+  box-shadow:
+    0 18px 35px rgba(239, 68, 68, 0.5),
+    inset 0 -3px 6px rgba(0,0,0,0.15);
+}
+
+.confirm-btn:active {
+  transform: scale(0.96);
+}
+
+/* Optional subtle glow pulse */
+.confirm-btn:hover::after {
+  content: "";
+  position: absolute;
+}
+
+/* ===========================
+   ANIMATIONS
+=========================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px) scale(0.95);
+    opacity: 0;
   }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+
