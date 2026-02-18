@@ -1,8 +1,7 @@
 import Ticket from "../models/Ticket.js";
 import User from "../models/User.js";
 import notifyUser from "../utils/notify.js";
-
-
+import createNotification from "../utils/createNotification.js";
 
 
 export const assignTicketToTechnician = async (req, res) => {
@@ -10,7 +9,6 @@ export const assignTicketToTechnician = async (req, res) => {
     const { ticketId, technicianId } = req.body;
 
     const ticket = await Ticket.findById(ticketId);
-
     if (!ticket) {
       return res.status(404).json({ message: "Ticket not found" });
     }
@@ -25,30 +23,55 @@ export const assignTicketToTechnician = async (req, res) => {
     ticket.assignedTo = technicianId;
     await ticket.save();
 
-    // 🔔 Notify Technician
-    await notifyUser(
-      technician,
-      "New Ticket Assigned - IT Support Hub",
-      "🛠 New Ticket Assigned",
-      `
-        <p>You have been assigned a new ticket.</p>
-        <p><strong>Ticket ID:</strong> ${ticket._id}</p>
-        <p><strong>Title:</strong> ${ticket.title}</p>
-        <p><strong>Priority:</strong> ${ticket.priority}</p>
-      `
-    );
+    // 🔥 Notify Technician ONLY if enabled
+    if (technician.notificationEnabled) {
 
-    // 🔔 Notify User
-    await notifyUser(
-      user,
-      "Technician Assigned - IT Support Hub",
-      "👨‍🔧 Technician Assigned",
-      `
-        <p>Your ticket has been assigned to a technician.</p>
-        <p><strong>Ticket ID:</strong> ${ticket._id}</p>
-        <p><strong>Title:</strong> ${ticket.title}</p>
-      `
-    );
+      await notifyUser(
+        technician,
+        "New Ticket Assigned - IT Support Hub",
+        "🛠 New Ticket Assigned",
+        `
+          <p><strong>Ticket ID:</strong> ${ticket._id}</p>
+          <p><strong>Title:</strong> ${ticket.title}</p>
+        `
+      );
+
+      await createNotification(
+        technician._id,
+        "🛠 You have been assigned a new ticket",
+        ticket._id
+      );
+    }
+
+    // 🔥 Notify User ONLY if enabled
+    if (user.notificationEnabled) {
+
+      await notifyUser(
+        user,
+        "Technician Assigned - IT Support Hub",
+        "👨‍🔧 Technician Assigned",
+        `
+          <p>Your ticket has been assigned.</p>
+          <p><strong>Ticket ID:</strong> ${ticket._id}</p>
+        `
+      );
+
+      await createNotification(
+        user._id,
+        "👨‍🔧 Technician assigned to your ticket",
+        ticket._id
+      );
+    }
+
+    // 🔥 Admin self-log notification (optional)
+    const admin = await User.findById(req.user._id);
+    if (admin && admin.notificationEnabled) {
+      await createNotification(
+        admin._id,
+        "🛠 Ticket assigned successfully",
+        ticket._id
+      );
+    }
 
     res.json({ message: "Ticket assigned successfully" });
 

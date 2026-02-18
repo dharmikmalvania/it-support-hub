@@ -1,17 +1,44 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FaHome,
   FaTicketAlt,
   FaHistory,
   FaUsers,
   FaSignOutAlt,
+  FaBell,
+  FaUser,
 } from "react-icons/fa";
+import axios from "../utils/axiosInstance";
 import "../layouts/adminLayout.css";
 
 const AdminSidebar = () => {
   const navigate = useNavigate();
   const [showLogout, setShowLogout] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchUnread = async () => {
+      try {
+        const { data } = await axios.get("/notifications", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const count = data.filter((n) => !n.isRead).length;
+        setUnreadCount(count);
+      } catch (error) {
+        console.error("UNREAD FETCH ERROR:", error);
+      }
+    };
+
+    if (token) {
+      fetchUnread();
+    }
+  }, [token]);
 
   const confirmLogout = () => {
     localStorage.removeItem("token");
@@ -25,17 +52,28 @@ const AdminSidebar = () => {
         {/* LOGO */}
         <div className="admin-sidebar-logo">
           <span>IT</span>
-          
         </div>
 
         {/* MENU */}
         <nav className="admin-sidebar-menu">
+
           <NavLink
             to="/admin/dashboard"
             className="admin-side-item"
             data-label="Dashboard"
           >
             <FaHome />
+          </NavLink>
+
+          <NavLink
+            to="/admin/notifications"
+            className="admin-side-item"
+            data-label="Notifications"
+          >
+            <FaBell />
+            {unreadCount > 0 && (
+              <span className="badge">{unreadCount}</span>
+            )}
           </NavLink>
 
           <NavLink
@@ -61,6 +99,15 @@ const AdminSidebar = () => {
           >
             <FaUsers />
           </NavLink>
+
+          <NavLink
+            to="/admin/profile"
+            className="admin-side-item"
+            data-label="Profile"
+          >
+            <FaUser />
+          </NavLink>
+
         </nav>
 
         {/* LOGOUT */}

@@ -57,15 +57,35 @@ export const changePassword = async (req, res) => {
 
 /* TOGGLE EMAIL NOTIFICATION */
 export const toggleNotification = async (req, res) => {
-  const { enabled } = req.body; // true / false from frontend
+  try {
+    console.log("🔄 TOGGLE HIT");
+    console.log("User ID:", req.user._id);
+    console.log("Body:", req.body);
 
-  const user = await User.findById(req.user.id);
-  user.notificationEnabled = enabled;
+    const user = await User.findById(req.user._id);
 
-  await user.save();
+    if (!user) {
+      console.log("❌ User not found");
+      return res.status(404).json({ message: "User not found" });
+    }
 
-  res.json({
-    status: user.notificationEnabled,
-  });
+    console.log("Before update:", user.notificationEnabled);
+
+    user.notificationEnabled = req.body.notificationEnabled;
+
+    await user.save();
+
+    console.log("After update:", user.notificationEnabled);
+
+    res.json({
+      notificationEnabled: user.notificationEnabled,
+    });
+
+  } catch (error) {
+    console.error("❌ TOGGLE ERROR:", error);
+    res.status(500).json({ message: "Toggle failed" });
+  }
 };
+
+
 

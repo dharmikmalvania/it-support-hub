@@ -1,21 +1,48 @@
 import createNotification from "./createNotification.js";
 import sendEmail from "./sendEmail.js";
 import { baseTemplate } from "./emailTemplates.js";
+import User from "../models/User.js";
 
 const notifyUser = async (user, subject, title, content) => {
   try {
-    // 🔔 Save notification in DB
-    await createNotification(user._id, title);
+    if (!user?._id) {
+      console.log("❌ notifyUser: invalid user");
+      return;
+    }
 
-    // 📧 Send styled email
+    // Always fetch fresh user from DB
+    const freshUser = await User.findById(user._id);
+
+    if (!freshUser) {
+      console.log("❌ notifyUser: user not found");
+      return;
+    }
+
+    console.log("🔔 Notification Check:", {
+      email: freshUser.email,
+      enabled: freshUser.notificationEnabled,
+    });
+
+    // 🔥 MASTER TOGGLE CHECK
+    if (!freshUser.notificationEnabled) {
+      console.log("🔕 Notifications disabled for:", freshUser.email);
+      return;
+    }
+
+    // 🔔 Save DB notification
+    await createNotification(freshUser._id, title);
+
+    // 📧 Send Email
     await sendEmail(
-      user.email,
+      freshUser.email,
       subject,
       baseTemplate(title, content)
     );
 
+    console.log("✅ Notification + Email sent");
+
   } catch (error) {
-    console.error("NOTIFY ERROR:", error.message);
+    console.error("❌ notifyUser ERROR:", error.message);
   }
 };
 

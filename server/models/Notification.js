@@ -11,10 +11,19 @@ const notificationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    relatedTicket: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Ticket",
+    },
     isRead: {
       type: Boolean,
       default: false,
     },
+    notificationEnabled: {
+  type: Boolean,
+  default: true,
+},
+
   },
   { timestamps: true }
 );

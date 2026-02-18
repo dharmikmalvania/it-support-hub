@@ -152,7 +152,10 @@ export const closeTicket = async (req, res) => {
 
     await ticket.save();
 
+    // 🔥 Load user properly
     const user = await User.findById(ticket.user);
+
+    console.log("🔵 Closing ticket. About to notify:", user.email);
 
     await notifyUser(
       user,
@@ -169,10 +172,11 @@ export const closeTicket = async (req, res) => {
     res.json(ticket);
 
   } catch (error) {
-    console.error("CLOSE TICKET ERROR:", error);
+    console.error("❌ CLOSE TICKET ERROR:", error);
     res.status(500).json({ message: "Failed to close ticket" });
   }
 };
+
 
 export const addWorkLog = async (req, res) => {
   const { message } = req.body;

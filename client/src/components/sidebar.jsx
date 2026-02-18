@@ -5,6 +5,7 @@ import {
   FaUser,
   FaHistory,
   FaSignOutAlt,
+  FaBell,
 } from "react-icons/fa";
 import { useState } from "react";
 import "./Sidebar.css";
@@ -51,6 +52,15 @@ const Sidebar = () => {
   <NavLink to="/user/history" className="side-item" data-label="History">
     <FaHistory />
   </NavLink>
+
+  <NavLink
+  to="/user/notifications"
+  className="side-item"
+  data-label="Notifications"
+>
+  <FaBell />
+</NavLink>
+
 
   <NavLink to="/user/profile" className="side-item" data-label="Profile">
     <FaUser />

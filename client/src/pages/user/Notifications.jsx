@@ -1,42 +1,116 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../../styles/user/noti.css";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      const res = await axios.get(
-        "http://localhost:5000/api/notifications",
-        {
-          headers: {
-            Authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
-      setNotifications(res.data);
-    };
+    if (!token) return;
     fetchNotifications();
   }, []);
 
+  const fetchNotifications = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/api/notifications",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setNotifications(res.data);
+    } catch (error) {
+      console.error("Fetch notification error:", error);
+    }
+  };
+
+  const markAsRead = async (id) => {
+    try {
+      await axios.put(
+        `http://localhost:5000/api/notifications/${id}/read`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+    } catch (error) {
+      console.error("Mark read error:", error);
+    }
+  };
+
+  const handleNotificationClick = async (notification) => {
+    await markAsRead(notification._id);
+
+    setNotifications((prev) =>
+      prev.map((n) =>
+        n._id === notification._id ? { ...n, isRead: true } : n
+      )
+    );
+
+    // 🔥 Navigate to related ticket if exists
+    if (notification.relatedTicket) {
+      navigate(`/user/ticket/${notification.relatedTicket}`);
+    }
+  };
+
+  const markAllAsRead = async () => {
+    try {
+      await axios.put(
+        "http://localhost:5000/api/notifications/read-all",
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setNotifications((prev) =>
+        prev.map((n) => ({ ...n, isRead: true }))
+      );
+    } catch (error) {
+      console.error("Mark all error:", error);
+    }
+  };
+
+  if (!token) {
+    return <p>Please login to view notifications.</p>;
+  }
+
   return (
-    <div>
-      <h1>Notifications</h1>
+    <div className="noti-container">
+      <div className="noti-header">
+        <h2>Notifications</h2>
+
+        {notifications.some((n) => !n.isRead) && (
+          <button onClick={markAllAsRead} className="mark-all-btn">
+            Mark all as read
+          </button>
+        )}
+      </div>
 
       {notifications.length === 0 ? (
-        <p>No notifications</p>
+        <div className="empty-noti">
+          <p>No notifications yet 🚀</p>
+        </div>
       ) : (
-        <ul className="notification-list">
+        <div className="noti-list">
           {notifications.map((n) => (
-            <li
+            <div
               key={n._id}
-              className={n.isRead ? "read" : "unread"}
+              className={`noti-card ${
+                n.isRead ? "read" : "unread"
+              }`}
+              onClick={() => handleNotificationClick(n)}
             >
-              {n.message}
-            </li>
+              <p>{n.message}</p>
+              <span>
+                {new Date(n.createdAt).toLocaleString()}
+              </span>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

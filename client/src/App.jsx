@@ -15,13 +15,16 @@ import Profile from "./pages/user/Profile";
 import Feedback from "./pages/user/Feedback";
 import EditTicket from "./pages/user/EditTicket";
 import TicketDetail from "./pages/user/TicketDetail";
+import Notifications from "./pages/user/Notifications";
 
 /* Admin Pages */
 import AdminDashboard from "./pages/admin/Dashboard";
 import OpenTickets from "./pages/admin/OpenTickets";
 import TicketHistory from "./pages/admin/TicketHistory";
-import Technicians from "./pages/admin/Technicians";
-import TechnicianProfile from "./pages/admin/TechnicianProfile";
+import Technicians from "./pages/admin/AdminTechnicianDetails";
+import AdminTechnicianDetails from "./pages/admin/AdminTechnicianDetails";
+import AdminNotifications from "./pages/admin/AdminNotifications";
+import AdminProfile from "./pages/admin/AdminProfile";
 
 /* Technician Pages */
 import TechnicianDashboard from "./pages/technician/Dashboard";
@@ -31,6 +34,10 @@ import TechnicianPerformance from "./pages/technician/Performance";
 import ActiveTickets from "./pages/technician/ActiveTickets";
 import ClosedTickets from "./pages/technician/ClosedTickets";
 import AdminTicketDetails from "./pages/admin/AdminTicketDetails";
+import TechnicianNotifications from "./pages/technician/TechnicianNotifications";
+import TechnicianProfile from "./pages/technician/TechnicianProfile";
+
+
 
 /* Auth */
 import Login from "./pages/auth/Login";
@@ -60,8 +67,10 @@ const App = () => {
               <Route path="open-tickets" element={<OpenTickets />} />
               <Route path="ticket-history" element={<TicketHistory />} />
               <Route path="technicians" element={<Technicians />} />
-              <Route path="technician/:id" element={<TechnicianProfile />} />
+             <Route path="technician/:id" element={<AdminTechnicianDetails />} />
             <Route path="/admin/tickets/:id"element={<AdminTicketDetails />}/>
+            <Route path="/admin/notifications" element={<AdminNotifications />} />
+            <Route path="/admin/profile" element={<AdminProfile />}/>
 
             </Route>
           </Route>
@@ -77,6 +86,7 @@ const App = () => {
               <Route path="feedback/:id" element={<Feedback />} />
               <Route path="edit-ticket/:id" element={<EditTicket />} />
               <Route path="ticket/:id" element={<TicketDetail />} />
+              <Route path="/user/notifications" element={<Notifications />} />
             </Route>
           </Route>
 
@@ -89,8 +99,12 @@ const App = () => {
               <Route path="performance" element={<TechnicianPerformance />} />
 <Route path="tickets/active" element={<ActiveTickets />} />
 <Route path="tickets/closed" element={<ClosedTickets />} />
+<Route path="/technician/notifications" element={<TechnicianNotifications />}/>
 
-
+<Route
+  path="/technician/profile"
+  element={<TechnicianProfile />}
+/>
             </Route>
           </Route>
 

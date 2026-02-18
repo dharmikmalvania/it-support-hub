@@ -1,8 +1,8 @@
 import Ticket from "../models/Ticket.js";
 import User from "../models/User.js";
 import notifyUser from "../utils/notify.js";
-
-
+import createNotification from "../utils/createNotification.js";
+import sendEmail from "../utils/sendEmail.js";
 // DASHBOARD STATS
 export const getTicketStats = async (req, res) => {
   const tickets = await Ticket.find({ user: req.user._id });
@@ -34,17 +34,55 @@ export const createTicket = async (req, res) => {
 
     const user = await User.findById(req.user.id);
 
-    await notifyUser(
-      user,
-      "🎫 Ticket Created - IT Support Hub",
-      "🎫 Ticket Created Successfully",
-      `
-        <p><strong>Ticket ID:</strong> ${ticket._id}</p>
-        <p><strong>Title:</strong> ${ticket.title}</p>
-        <p><strong>Priority:</strong> ${ticket.priority}</p>
-        <p><strong>Status:</strong> Open</p>
-      `
-    );
+    // ===============================
+    // 🔔 USER NOTIFICATION + EMAIL
+    // ===============================
+    if (user.notificationEnabled) {
+      await notifyUser(
+        user,
+        "🎫 Ticket Created - IT Support Hub",
+        "🎫 Ticket Created Successfully",
+        `
+          <p><strong>Ticket ID:</strong> ${ticket._id}</p>
+          <p><strong>Title:</strong> ${ticket.title}</p>
+          <p><strong>Priority:</strong> ${ticket.priority}</p>
+          <p><strong>Status:</strong> Open</p>
+        `
+      );
+
+      await createNotification(
+        user._id,
+        "🎫 Your ticket has been created",
+        ticket._id
+      );
+    }
+
+    // ===============================
+    // 🔔 ADMIN NOTIFICATION + EMAIL
+    // ===============================
+    const admins = await User.find({ role: "admin" });
+
+    for (const admin of admins) {
+      if (!admin.notificationEnabled) continue;
+
+      await createNotification(
+        admin._id,
+        "🆕 New ticket submitted",
+        ticket._id
+      );
+
+      await notifyUser(
+        admin,
+        "New Ticket Submitted - IT Support Hub",
+        "🆕 New Ticket Alert",
+        `
+          <p><strong>User:</strong> ${user.name}</p>
+          <p><strong>Ticket ID:</strong> ${ticket._id}</p>
+          <p><strong>Title:</strong> ${ticket.title}</p>
+          <p><strong>Priority:</strong> ${ticket.priority}</p>
+        `
+      );
+    }
 
     res.status(201).json({
       success: true,
@@ -154,27 +192,49 @@ export const closeTicket = async (req, res) => {
     ticket.status = "Closed";
     await ticket.save();
 
-    // 🔹 send closure email
-    await sendEmail(
-      ticket.user.email,
-      "✅ Ticket Closed - IT Support Hub",
-      `
-        <h2>Your ticket has been resolved</h2>
-        <p><strong>Title:</strong> ${ticket.title}</p>
-        <p><strong>Status:</strong> Closed</p>
-        <br />
-        <p>Thank you for using IT Support Hub.</p>
-        <p>If you are satisfied, please leave feedback.</p>
-      `
-    );
+    const user = ticket.user;
 
-    await createNotification(
-  ticket.user._id,
-  "✅ Your ticket has been closed"
-);
+    // ===============================
+    // 🔔 USER EMAIL + IN-APP
+    // ===============================
+    if (user.notificationEnabled) {
 
+      await sendEmail(
+        user.email,
+        "✅ Ticket Closed - IT Support Hub",
+        `
+          <h2>Your ticket has been resolved</h2>
+          <p><strong>Title:</strong> ${ticket.title}</p>
+          <p><strong>Status:</strong> Closed</p>
+          <br />
+          <p>Thank you for using IT Support Hub.</p>
+        `
+      );
+
+      await createNotification(
+        user._id,
+        "✅ Your ticket has been closed",
+        ticket._id
+      );
+    }
+
+    // ===============================
+    // 🔔 ADMIN NOTIFY (optional)
+    // ===============================
+    const admins = await User.find({ role: "admin" });
+
+    for (const admin of admins) {
+      if (!admin.notificationEnabled) continue;
+
+      await createNotification(
+        admin._id,
+        "📁 Ticket has been closed",
+        ticket._id
+      );
+    }
 
     res.json(ticket);
+
   } catch (error) {
     console.error("CLOSE TICKET ERROR:", error);
     res.status(500).json({ message: "Failed to close ticket" });
@@ -207,12 +267,6 @@ export const submitFeedback = async (req, res) => {
       });
     }
 
-    if (ticket.feedback?.rating) {
-      return res.status(400).json({
-        message: "Feedback already submitted",
-      });
-    }
-
     ticket.feedback = {
       rating,
       comment,
@@ -221,10 +275,12 @@ export const submitFeedback = async (req, res) => {
 
     await ticket.save();
 
-    // 🔥 Notify Admin
     const admins = await User.find({ role: "admin" });
 
     for (const admin of admins) {
+
+      if (!admin.notificationEnabled) continue;
+
       await notifyUser(
         admin,
         "New Ticket Feedback Received - IT Support Hub",
@@ -236,6 +292,12 @@ export const submitFeedback = async (req, res) => {
           <p><strong>Comment:</strong> ${comment || "No comment provided"}</p>
         `
       );
+
+      await createNotification(
+        admin._id,
+        "⭐ New feedback received",
+        ticket._id
+      );
     }
 
     res.json({ message: "Feedback submitted successfully" });
@@ -245,8 +307,6 @@ export const submitFeedback = async (req, res) => {
     res.status(500).json({ message: "Failed to submit feedback" });
   }
 };
-
-
 
 export const closeTicketWithFeedback = async (req, res) => {
   try {
@@ -271,8 +331,6 @@ export const closeTicketWithFeedback = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-
 /* =========================
    GET TICKET HISTORY
    (Closed tickets only)

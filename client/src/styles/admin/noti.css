@@ -1,0 +1,51 @@
+.admin-noti-container {
+  padding: 40px;
+  margin-left: 100px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1f2937, #111827);
+  color: #fff;
+}
+
+.admin-noti-container h2 {
+  margin-bottom: 30px;
+}
+
+.admin-noti-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-noti-card {
+  padding: 18px 22px;
+  border-radius: 14px;
+  background: #1e293b;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.admin-noti-card:hover {
+  transform: translateY(-4px);
+  background: #334155;
+}
+
+.admin-noti-card.unread {
+  border-left: 6px solid #6366f1;
+}
+
+.admin-noti-card.read {
+  opacity: 0.6;
+}
+
+.admin-noti-card p {
+  font-weight: 500;
+}
+
+.admin-noti-card span {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.empty {
+  opacity: 0.7;
+}

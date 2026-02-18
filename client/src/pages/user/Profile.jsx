@@ -12,10 +12,6 @@ const Profile = () => {
   const [notification, setNotification] = useState(true);
   const [avatar, setAvatar] = useState("");
 
-
-
-
-
   useEffect(() => {
     loadProfile();
   }, []);
@@ -89,9 +85,9 @@ const toggleNotify = async () => {
   try {
     const newValue = !notification;
 
-    const { data } = await axios.put(
+    await axios.put(
       "/user/notification",
-      { enabled: newValue },
+      { notificationEnabled: newValue }, // 🔥 match backend field
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -99,12 +95,13 @@ const toggleNotify = async () => {
       }
     );
 
-    setNotification(data.status);
+    setNotification(newValue); // 🔥 no dependency on response
   } catch (error) {
     console.error("NOTIFICATION ERROR:", error);
     alert("Failed to update notification setting");
   }
 };
+
 
 
 const updateProfile = async () => {
