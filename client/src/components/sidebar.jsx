@@ -8,7 +8,7 @@ import {
   FaBell,
 } from "react-icons/fa";
 import { useState } from "react";
-import "./Sidebar.css";
+import "./sidebar.css";
 
 const Sidebar = () => {
   const navigate = useNavigate();
