@@ -11,7 +11,7 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 
-import "../../styles/raiseTicket.css";
+import "../../styles/RaiseTicket.css";
 
 const EditTicket = () => {
   const { id } = useParams();
