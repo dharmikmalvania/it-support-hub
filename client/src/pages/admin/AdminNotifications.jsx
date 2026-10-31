@@ -12,7 +12,7 @@ const AdminNotifications = () => {
     fetchNotifications();
   }, []);
 
-  const fetchNotifications = async () => {
+  async function fetchNotifications() {
     try {
       const { data } = await axios.get("/notifications", {
         headers: {

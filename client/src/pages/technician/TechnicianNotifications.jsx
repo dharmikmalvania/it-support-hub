@@ -12,7 +12,7 @@ const TechnicianNotifications = () => {
     fetchNotifications();
   }, []);
 
-  const fetchNotifications = async () => {
+  async function fetchNotifications() {
     const { data } = await axios.get("/notifications", {
       headers: { Authorization: `Bearer ${token}` },
     });

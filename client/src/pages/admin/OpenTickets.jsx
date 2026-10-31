@@ -4,36 +4,20 @@ import axios from "axios";import "../../styles/admin/opentickets.css";
 
 const OpenTickets = () => {
   const [tickets, setTickets] = useState([]);
-  const [techs, setTechs] = useState([]);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
+  async function fetchData() {
     const t = await axios.get(
       "http://localhost:5000/api/admin/open-tickets",
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    const techRes = await axios.get(
-      "http://localhost:5000/api/admin/technicians",
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
     setTickets(t.data);
-    setTechs(techRes.data);
-  };
-
-  const assignTech = async (ticketId, techId) => {
-    await axios.patch(
-      "http://localhost:5000/api/admin/assign-ticket",
-      { ticketId, technicianId: techId },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    fetchData();
-  };
+  }
 
 return (
   <div className="admin-open-page">

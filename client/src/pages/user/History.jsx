@@ -5,8 +5,6 @@ import "../../styles/history.css";
 
 const History = () => {
   const navigate = useNavigate();
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
   const [tickets, setTickets] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");

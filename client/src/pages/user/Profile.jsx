@@ -16,7 +16,7 @@ const Profile = () => {
     loadProfile();
   }, []);
 
- const loadProfile = async () => {
+ async function loadProfile() {
   try {
     const { data } = await axios.get("/user/profile", {
       headers: {

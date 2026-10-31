@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +9,12 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const logout = useCallback(() => {
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/login");
+  }, [navigate]);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -17,28 +23,25 @@ export const AuthProvider = ({ children }) => {
         const decoded = jwtDecode(token);
 
         if (decoded.exp * 1000 < Date.now()) {
-          logout();
+          localStorage.removeItem("token");
+          navigate("/login");
         } else {
           setUser(decoded);
         }
       } catch (error) {
-        logout();
+        console.error("Invalid authentication token", error);
+        localStorage.removeItem("token");
+        navigate("/login");
       }
     }
 
     setLoading(false);
-  }, []);
+  }, [navigate]);
 
   const login = (token) => {
     localStorage.setItem("token", token);
     const decoded = jwtDecode(token);
     setUser(decoded);
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
-    navigate("/login");
   };
 
   return (

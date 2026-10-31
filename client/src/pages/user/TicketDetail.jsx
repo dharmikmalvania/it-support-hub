@@ -26,6 +26,7 @@ const TicketDetails = () => {
 
         setTicket(res.data);
       } catch (error) {
+        console.error("Failed to load ticket", error);
         alert("Failed to load ticket");
         navigate("/user/my-tickets");
       }

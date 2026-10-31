@@ -13,7 +13,7 @@ const Notifications = () => {
     fetchNotifications();
   }, []);
 
-  const fetchNotifications = async () => {
+  async function fetchNotifications() {
     try {
       const res = await axios.get(
         "http://localhost:5000/api/notifications",

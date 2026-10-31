@@ -54,6 +54,7 @@ const AdminTicketDetails = () => {
 
       navigate("/admin/open-tickets");
     } catch (error) {
+      console.error("Failed to assign technician", error);
       alert("Failed to assign technician");
     } finally {
       setAssigning(false);

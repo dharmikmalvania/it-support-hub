@@ -18,7 +18,7 @@ const AdminProfile = () => {
     loadProfile();
   }, []);
 
-  const loadProfile = async () => {
+  async function loadProfile() {
     try {
       const { data } = await axios.get("/user/profile", {
         headers: {
@@ -66,6 +66,7 @@ const AdminProfile = () => {
       setCurrentPassword("");
       setNewPassword("");
     } catch (error) {
+      console.error("Password change failed", error);
       alert("Password change failed");
     }
   };

@@ -20,7 +20,8 @@ const TicketDetails = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setTicket(res.data);
-    } catch (err) {
+    } catch (error) {
+      console.error("Unable to load technician ticket", error);
       alert("Unable to load ticket");
       navigate("/technician/tickets/active");
     }
@@ -46,6 +47,7 @@ const TicketDetails = () => {
       );
       fetchTicket();
     } catch (error) {
+      console.error("Failed to start work", error);
       alert("Failed to start work");
     } finally {
       setLoading(false);

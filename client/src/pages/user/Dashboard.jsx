@@ -22,7 +22,6 @@ const Dashboard = () => {
   });
 
   const [recentTickets, setRecentTickets] = useState([]);
-  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
     const loadDashboard = async () => {
@@ -68,9 +67,7 @@ const Dashboard = () => {
             },
           }
         );
-        const chartJson = await chartRes.json();
-        setChartData(chartJson);
-
+        await chartRes.json();
       } catch (err) {
         console.error("Dashboard load failed", err);
         alert("Failed to load dashboard data");

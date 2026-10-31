@@ -13,9 +13,6 @@ const Feedback = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // ✅ FIX: DEFINE userInfo
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [message, setMessage] = useState("");

@@ -17,8 +17,8 @@ const NotificationBell = () => {
           }
         );
         setNotifications(res.data);
-      } catch (err) {
-        console.error("Notification fetch failed");
+      } catch (error) {
+        console.error("Notification fetch failed", error);
       }
     };
 
