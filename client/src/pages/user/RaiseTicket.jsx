@@ -11,8 +11,7 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 
-import "../../styles/R
-  aiseTicket.css";
+import "../../styles/RaiseTicket.css";
 
 const RaiseTicket = () => {
   const navigate = useNavigate();
